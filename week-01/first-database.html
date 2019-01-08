@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 02: Creating Your First Database</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle,
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+## Lecture .eight[02]
+
+# Creating Your First Database
+
+---
+class: middle
+
+# Agenda
+
+- [ ] Review Terms
+- [ ] Portal Spreadsheets
+- [ ] Install PostgreSQL
+- [ ] Make a Database!
+
+---
+class: middle
+
+# .eight[Data]
+
+- "Facts or information usually used to calculate, analyze, or plan something"
+- "Facts or statistics collected together for reference or analysis"
+- "Information or knowledge represented in a form suitable for processing"
+
+---
+class: middle
+
+# .eight[Database]
+
+"An organized collection of data."
+
+---
+class: middle
+
+# .eight[Database Management System]
+
+"Software that interacts with the database, applications, and users."
+
+# .eleven[DB != DBMS]
+
+---
+class: middle
+
+# .eight[Data Type]
+
+"The data's role, it defines how it is stored and how it can be processed."
+
+---
+class: middle
+
+# .eight[CRUD Operations]
+
+"Create, Read, Update, Delete"
+
+---
+class: middle
+
+# .eight[Data Modelling]
+
+"A formal process for finding required data and relationships."
+
+---
+class: middle
+
+# .fourteen[Review]
+
+# Use a spreadsheet to capture and structure some data that might be found in the school portal.
+
+---
+class: middle, center
+
+# .seven[Generic Idea or Type]
+## .eight[Specific Example]
+### .nine[Aspect of Example]
+
+---
+class: middle, center
+
+# .seven[Teacher]
+## .eight[*Me*]
+### .nine["Zach Fedor"]
+
+---
+class: middle, center
+
+# .seven[Course]
+## .eight[*This One*]
+### .nine["CSET-155"]
+
+---
+class: middle, center
+
+# .seven[Course]
+## .eight[*This One*]
+### .nine["M,T 12:00-4:30"]
+
+---
+class: middle, center
+
+# .seven[Entity]
+## .eight[Item]
+### .nine[Attribute]
+
+???
+Class, Instance, Property
+Prototype, Object Instance, Property
+
+---
+class: middle, center
+
+# .seven[Sheet  ->  Table]
+## .eight[Row  ->  Record]
+### .nine[Column  ->  Field]
+
+---
+
+# Install PostgreSQL
+
+```sh
+$ brew update
+$ brew install postgresql
+$ brew services start postgresql
+$ psql -V
+psql (PostgreSQL) 11.1
+```
+
+---
+
+# Install pgAdmin
+
+```sh
+$ brew cask install pgadmin4
+```
+
+---
+
+# Connect PGAdmin to Postgres
+
+- Open pgAdmin using Spotlight
+- Click "Add New Server"
+- General > Name: type .fourteen[localhost]
+- Connection > Hostname/addres: type .fourteen[localhost]
+- Add your **computer** username and leave password blank
+  - run .fourteen[whoami] in your terminal to find your username
+- Click "Save"
+
+.eleven[You should only have to do this once.]
+
+---
+
+# Quick Overview of pgAdmin
+
+- Server: a running instance of the DBMS, .eight[PostgreSQL], on our machine called .eight[localhost]
+- Database: we have one, the default database called .eight[postgres]
+- Schemas > public > Tables: we don't have any yet
+
+.eleven[Don't worry about the other stuff yet.]
+
+---
+
+# Your First Database!
+
+- Make sure the .eight[postgres] **database** is selected
+- Click the lightning icon at the top right of the sidebar
+- This is the .eight[Query Tool], the place to execute queries.
+
+```sql
+CREATE DATABASE analysis;
+```
+
+- Hit the execute button (also a lightning bolt) or F5
+
+---
+
+# Your First Query!
+
+- .eight[Query]: A statement to extract data or perform an action.
+- .eight[Keywords]: SQL syntax, should be uppercased
+- .eight[Values]: data that you define, like names, strings, numbers, etc.
+- .eight[Semicolon]: ends a SQL statement. Don't forget it!
+
+---
+
+# Did it work?
+
+- Queries usually return .eight[Messages]:
+```
+Query returned successfully in 709 msec.
+```
+- In the sidebar, right click .eight[Databases(1)]
+- Click .eight[Refresh]
+- Ta-da!
+
+---
+
+# Connect To Your New Database
+
+- Queries need to be executed on a database
+- Certain exceptions...
+- Hit the "X" icon to close the Query Tool
+- Click on your new .eight[analysis] database
+- Reopen the Query Tool
+
+---
+
+# Creating a Table
+
+- Where data lives and relationships are defined
+- Create the .eight[columns]
+- Assign each column a .eight[data type]
+  - For example, dates can be stored as YYYY-MM-DD
+
+---
+
+# Your First Table
+
+```sql
+CREATE TABLE teachers (
+  id bigserial,
+  first_name varchar(25),
+  last_name varchar(50),
+  school varchar(50),
+  hire_date date,
+  salary numeric
+);
+```
+
+---
+
+# Your First Table
+
+- Not comprehensive, enough to get us started
+- 2 Keywords + Value: CREATE, TABLE, teachers
+- Newlines or tabs are just for readability
+- Each column name represents one discrete data element defined by a data type
+  - bigserial, varchar, date, etc.
+  - We'll learn more later
+
+---
+
+# Inserting Data
+
+```sql
+INSERT INTO teachers (first_name, last_name, school, hire_date, salary)
+VALUES ('Janet', 'Smith', 'FD Roosevelt HS', '2011-10-30', 36200),
+  ('Lee', 'Reynolds', 'FD Roosevelt HS', '1993-05-22', 65000),
+  ('Samantha', 'White', 'Myers Middle School', '2005-08-01', 43500),
+  ('Carmen', 'Diaz', 'FD Roosevelt HS', '2011-10-30', 36200);
+``` 
+
+---
+class: middle, center
+
+# Why do the dates look funny?
+
+# [Because](https://xkcd.com/1179/)
+
+---
+class: middle, center
+
+# Why did we not add an ID?
+
+# bigserial
+
+---
+class: middle, center
+
+# Did it work?
+
+```
+Query returned successfully: 4 rows affected.
+```
+
+---
+
+# .fourteen[Practice]
+
+- Make a new database called .eight[portal]
+- Create a table for each of your sheets, adding all the necessary fields
+- Insert your records into each table
+
+.eleven[Make sure you don't add the tables to the wrong database, or the data to the wrong table!]
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
