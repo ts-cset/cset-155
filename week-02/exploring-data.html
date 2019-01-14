@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 03: Exploring Data</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+## Lecture .eight[03]
+
+# Exploring Data
+
+---
+class: middle
+
+# Agenda
+
+1. [X] Review Homework
+2. [ ] Reset Our Data
+3. [ ] Inspect It
+4. [ ] Filter It
+5. [ ] Sort It
+6. [ ] Limit It
+
+---
+
+# Reset Data
+
+To make sure we're all looking at the same data, download [this file](week-01/chapter-01.sql) and run this command:
+
+```sh
+$ psql postgres -f chapter-01.sql
+DROP DATABASE
+CREATE DATABASE
+You are now connected to database "analysis" as user "zach".
+CREATE TABLE
+INSERT 0 6
+```
+
+---
+class: middle, center
+
+# Exploring Data
+
+Today, we learn to interview our data and see what story it can tell us.
+
+---
+class: middle, center
+
+# .eight[SELECT]
+
+## Retrieves Rows and Columns from one or more Tables
+
+---
+
+# Select Everything
+
+```sql
+SELECT * FROM teachers;
+```
+.fourteen[Retrieve all data in all columns from the teachers table]
+
+- The .eight[*] is a <em>wildcard</em>
+- Here, it means "Every Column"
+- .eight[FROM] specifies the table
+
+---
+
+# Select Certain Columns 
+
+```sql
+SELECT last_name, first_name, salary
+FROM teachers;
+```
+.fourteen[Retrieve all data in these three columns in the teachers table]
+
+- Separate the column names by commas
+- These are the most basic usages of SELECT
+- Helpful to get a quick glance at data
+
+---
+class: middle, center
+
+For all of these queries, imagine our database has **thousands** or even **millions** of rows.
+
+---
+
+# Find Unique Values
+
+```sql
+SELECT DISTINCT school FROM teachers;
+```
+.fourteen[Retrieve each unique value in the school column.]
+
+- .eight[DISTINCT] filters out duplicate values
+- Helpful to find inconsistent data (typos, bad formatting, etc.)
+
+---
+
+# Find Unique Values
+
+```sql
+SELECT DISTINCT school, salary
+FROM teachers;
+```
+.fourteen[Retrieve unique salaries from each unique school.]
+
+- .eight[DISTINCT] can take multiple columns
+- "For each *x* in the table, what are the *y* values?"
+- Examples:
+  - "For each venue, what bands are playing?"
+  - "For each student, what courses are they taking?"
+
+---
+
+# Sorting Data
+
+```sql
+SELECT first_name, last_name, salary
+FROM teachers ORDER BY salary DESC;
+```
+.fourteen[Retrieve all data in these three columns and sort by the highest salary]
+
+- .eight[ORDER BY] doesn't change the table, only the query result
+- Sorts in .eight[ASC] order by default, lowest to highest
+- Can also be .eight[DESC], highest to lowest
+- .eleven[Beware of sorting by text: 0 &lt; ? &lt; A &lt; _ &lt; a]
+
+---
+
+# Sorting Data
+
+```sql
+SELECT last_name, school, hire_date
+FROM teachers
+ORDER BY school ASC, hire_date DESC;
+```
+.fourteen[Retrieve all data in these columns, sorted by school, then by hire date]
+
+- .eight[ORDER BY] can be used on any number of columns
+- Most useful on only one or two
+
+---
+
+# Limiting Data
+
+```sql
+SELECT last_name, scool, hire_date
+FROM teachers
+WHERE school = 'Myers Middle School';
+```
+.eight[Retrieve only the data from these columns that match the criteria]
+
+- .eight[WHERE] can find a specific value, a range, or multiple values depending on the .eight[operator]
+- The .eight[WHERE] clause needs to follow the .eight[FROM] clause
+
+---
+
+# Comparison/Matching Operators
+
+- WHERE school .eight[=] 'Baker Middle'
+- WHERE school .eight[&lt;&gt;] 'Baker Middle'
+  - or .eight[!=]
+- WHERE salary .eight[&gt;] 20000
+- WHERE salary .eight[&lt;] 60500
+- WHERE salary .eight[&gt;].eight[=] 20000
+- WHERE salary .eight[&lt;].eight[=] 60500
+
+---
+
+# Comparison/Matching Operators
+
+- WHERE salary .eight[BETWEEN] 20000 .eight[AND] 40000
+- WHERE last_name .eight[IN] ('Bush', 'Roush')
+- WHERE first_name .eight[LIKE] 'Sam%'
+- WHERE first_name .eight[ILIKE] 'sam%'
+- WHERE first_name .eight[NOT] ILIKE 'sam%'
+
+---
+class: middle, center
+
+# .eleven[Note:]
+
+.eight[ILIKE] and .eight[!=] are Postgres only, not part of ANSI SQL.
+
+---
+
+# Practice:
+
+- Use .eight[=] to find teachers named 'Janet'
+- Use .eight[&lt;&gt;] to list schools excluding 'F.D. Roosevelt HS'
+- Use .eight[&lt;] to list teachers hired before January 1, 2000
+- Use .eight[&gt;].eight[=] to find teachers earning $43,500 or more
+- Use .eight[BETWEEN] to find teachers with a salary between $40,000 and $65,000
+  - Is it inclusive or exclusive?
+
+---
+
+# More with LIKE and ILIKE
+
+```sql
+LIKE 'b%'
+LIKE '%ak%'
+LIKE '_aker'
+LIKE 'ba_er'
+```
+.fourteen[All of these would match the word 'baker']
+
+- .eight[%] is a wildcard matching one or more characters
+- .eight[_] is a wildcard matching one single character
+
+---
+
+# More with LIKE and ILIKE
+
+- .eight[ILIKE] can be more helpful to make sure you don't exclude important data
+- Performance on large databases can be slow, we'll fix this later
+
+---
+
+# Practice: 
+
+```sql
+SELECT first_name FROM teachers
+WHERE first_name LIKE 'sam%';
+```
+
+```sql
+SELECT first_name FROM teachers
+WHERE first_name ILIKE 'sam%';
+```
+
+---
+
+# Combining Operators
+
+```sql
+SELECT * FROM teachers
+WHERE school = 'Myers Middle School'
+      AND salary &lt; 40000;
+```
+```sql
+SELECT * FROM teachers
+WHERE last_name = 'Cole'
+      OR last_name = 'Bush';
+```
+
+.eight[AND] and .eight[OR] can be combined any number of times
+
+---
+
+# Combining Operators
+
+```sql
+SELECT * FROM teachers
+WHERE school = 'F.D. Roosevelt HS'
+      AND (salary &lt; 38000 OR salary &gt; 40000);
+```
+
+Specify order of operations with parentheses
+
+---
+
+# Put It All Together
+
+```sql
+SELECT column_names
+FROM table_name
+WHERE criteria
+ORDER BY column_names;
+```
+.eleven[This order is important!]
+
+---
+
+# Put It All Together
+
+```sql
+SELECT first_name, last_name, school, hire_date, salary
+FROM teachers
+WHERE school LIKE '%Roos%'
+ORDER BY hire_date DESC;
+```
+
+---
+
+# Exercises
+
+Write queries for the following:
+- Gets a list of teachers in each school, both sorted alphabetically by school name first then last name.
+- Finds the teacher whose first name starts with 'S' and earns more than $40,000.
+- Ranks teachers hired since January 1st, 2010, ordered by highest paid to lowest.
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
