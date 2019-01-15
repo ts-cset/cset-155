@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 04: Data Types</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+## Lecture .eight[04]
+
+# Data Types
+
+---
+class: middle
+
+# Agenda
+
+1. [ ] Characters
+2. [ ] Numbers
+3. [ ] Dates and Times
+
+---
+class: middle, center
+
+# Each column holds one and only one data type.
+
+---
+
+# Characters
+
+Any combination of text, numbers, and symbols.
+
+- .eight[char(*n*)]
+- .eight[varchar(*n*)]
+- .eight[text]
+
+---
+
+# char(*n*)
+
+- Fixed-length text, where *n* is the length
+- char(8) will 8 characters, no more, no less
+- Extra space is padded with spaces
+
+.eight[The 4-character word "blue" would get stored as 8-character "blue&nbsp;&nbsp;&nbsp;&nbsp;".]
+
+---
+
+# varchar(*n*)
+
+- Variable-length text, where *n* is the max length
+- Strings less than *n* are not padded
+- Also called varying(*n*)
+
+.eight[The 4-character word "blue" takes 4 characters of data, where "red" only takes 3.]
+
+---
+
+# text
+
+- Variable-length column of unlimited length
+- Postgres only, not ANSI SQL
+- Strings that are too long for a varchar column won't get inserted. That won't happen to a text column.
+
+---
+
+# Characters
+
+```sql
+CREATE TABLE char_data_types (
+  varchar_column varchar(10),
+  char_column char(10),
+  text_column text
+);
+INSERT INTO char_data_types
+VALUES ('abc', 'abc', 'abc'),
+       ('defghi', 'defghi', 'defghi');
+COPY char_data_types
+TO '/Users/zach/char-types.txt'
+WITH (FORMAT CSV, HEADER, DELIMITER '|');
+```
+
+---
+
+# Characters
+
+- No difference in performance
+- Main difference is storage space
+- "What if we have a million rows?"
+
+.fourteen[What are some uses for char, varchar, and text?]
+
+---
+
+# Numbers
+
+Numbers used for math or numeric ordering.
+
+- Integers
+- Auto-Incrementing Integers
+- Fixed-point
+- Floating-point
+
+---
+
+# Integers
+
+Whole numbers, positive or negative
+
+- .eight[smallint]
+- .eight[integer]
+- .eight[bigint]
+
+---
+
+# Integers
+
+```md
+| Type     | Size    | Range                   |
+| ---      | ---     | ---                     |
+| smallint | 2 bytes | -32768 to +32768        |
+|          |         |                         |
+| integer  | 4 bytes | around -2.1 billion     |
+|          |         | to +2.1 billion         |
+|          |         |                         |
+| bigint   | 8 bytes | around -9.2 quadrillion |
+|          |         | to +9.2 quadrillion     |
+```
+
+.fourteen[What are some uses for these integer types?]
+
+---
+
+# Auto-Incrementing Integers
+
+Positive integers incrementing from 1 to a maximum
+
+- .eight[smallserial]
+- .eight[serial]
+- .eight[bigserial]
+
+---
+
+# Auto-Incrementing Integers
+
+- Implementations of smallint, integer, and bigint
+- Each INSERT will increment the column up to the max
+- ANSI SQL has a standard called .eight[identity columns]
+
+.eleven[Note: There can still be gaps!]
+
+---
+
+# Decimal Numbers
+
+Fractional numbers, positive and negative
+
+- Fixed-point or Floating-point
+- Store same data, just differently
+
+---
+
+# Fixed-Point
+
+.eight[numeric(*precision*, *scale*)]
+
+- *precision* is the maximum number of digits
+- *scale* is the number of digits to the right of the decimal
+- If you omit scale, it defaults to 0
+- If you omit both, they default to their maximum
+- Can also be called decimal(*precision*, *scale*)
+
+.eight[A column using numeric(5,2) would store numbers like 1.47, 1.00, and 121.50.]
+
+---
+
+# Floating-Point
+
+.eight[real] and .eight[double precision]
+
+- If fixed-point is *variable-size*, then floating-point is *variable-precision*
+- Numbers are stored as digits and an exponent
+
+---
+
+# Decimal Numbers
+
+```md
+| Type      | Size     | Range                   |
+| ---       | ---      | ---                     |
+| numeric   | variable | up to 131,072 digits    |
+|           |          | before and 16383 digits |
+|           |          | after the decimal       |
+|           |          |                         |
+| real      | 4 bytes  | 6 decimal digits        |
+|           |          |                         |
+| double    | 8 bytes  | 15 decimal digits       |
+| precision |          |                         |
+```
+
+---
+
+# Decimal Numbers
+
+```sql
+CREATE TABLE number_data_types (
+  numeric_column numeric(20,5),
+  real_column real,
+  double_column double precision
+);
+INSERT INTO number_data_types
+VALUES (.7, .7, .7),
+       (2.13579, 2.13579, 2.13579),
+       (2.1357987654, 2.1357987654, 2.1357987654);
+SELECT * FROM number_data_types;
+```
+
+---
+
+# Wat
+
+```sql
+SELECT numberic_column * 10000000 AS "Fixed",
+       real_column * 10000000 AS "Float"
+FROM number_data_types
+WHERE numeric_column = .7;
+```
+
+.eleven[Fixed != Float]
+
+---
+
+# Choose Your Number Adventure
+
+1. Use integers, unless you can't
+2. Use numeric if you need exact calculations
+3. Use a big enough number!
+
+---
+
+# Dates and Times
+
+Temporal data, aka time-aware data
+
+- .eight[timestamp]
+- .eight[date]
+- .eight[time]
+- .eight[interval]
+
+---
+
+# timestamp
+
+- 8 bytes, contains date and time
+- 4713 BC to 294276 AD
+- add the keywords .eight[with time zone]!
+- Postgres-only shortcut: .eight[timestamptz]
+
+---
+
+# date
+
+- Just the date, can't take time zone keywords
+- 4 bytes, 4713 BC to 5874897 AD
+
+# time
+
+- Just the time, CAN take time zone keywords
+- 8 bytes, 00:00:00 to 24:00:00
+
+---
+
+# interval
+
+- Unit of time as a quantity, no start or end time
+- 16 bytes, +/- 178,000,000 years
+- Takes units, like hours, days, or seconds
+
+---
+
+# Dates and Times
+
+```sql
+CREATE TABLE date_time_types (
+  timestamp_column timestamp with time zone,
+  interval_column interval
+);
+INSERT INTO date_time_types
+VALUES ('2018-12-31 01:00 EST', '2 days'),
+       ('2018-12-31 01:00 -8', '1 month'),
+       ('2018-12-31 01:00 Australia/Melbourne', '1 century'),
+       (now(), '1 week');
+SELECT * FROM date_time_types;
+```
+
+---
+
+# Dates and Times
+
+- By convention, use ISO format
+- Others do exist, but not standard
+- Time zone can use name, offset from UTC, or location
+- .eleven[Your query results show time relative to your time zone!]
+
+---
+
+# Working With Interval
+
+```sql
+SELECT timestamp_column, interval_column,
+       timestamp_column - interval_column AS new_date
+FROM date_time_types;
+```
+
+.eight[Computed columns are called expressions.]
+
+---
+
+# CAST
+
+Converts data types on output from a query
+
+### .fourteen[Try to find the syntax online]
+
+---
+
+# .fourteen[Exercise 01]
+
+You're tracking mileage of drivers each day to a tenth of a mile. Assuming no one can drive more than 999 miles a day, what type should the column be? Why?
+
+---
+
+# .fourteen[Exercise 02]
+
+In the table listing your drivers, what are appropriate data types for the first and last name columns? What are some reasons to split the names into two columns? What are reasons to keep it as one?
+
+---
+
+# .fourteen[Exercise 03]
+
+Assume you have a text column that includes strings formatted as dates, but one record is written as '4//2017'. What will happen when you try to convert that string to the timestamp data type?
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
