@@ -4,7 +4,7 @@
   <title>Lab 01: Importing Data</title>
   <meta charset="utf-8">
 
-  <link rel="stylesheet" href="assets/slides.css" />
+  <link rel="stylesheet" href="../assets/slides.css" />
 </head>
 <body>
   <h1>
@@ -23,8 +23,68 @@
 
   <pre>
     <code>
-      
+      COPY table_name
+      FROM '/path/to/file.csv'
+      WITH (FORMAT CSV, HEADER);
     </code>
   </pre>
+
+  <p>
+    We're going to import some census data, <a href="https://www.census.gov/prod/cen2010/briefs/c2010br-01.pdf" target="_blank">described here</a>. You can download the file <a href="https://raw.githubusercontent.com/anthonydb/practical-sql/master/Chapter_04/us_counties_2010.csv" target="_blank">here</a>. It's a heck of a lot bigger than the data sets we've been working on so far: it's got 3,143 records and 91 columns. Take a quick look at the file you just downloaded and see what you can learn about delimited text files. How are they organized? Where do the labels go? What separates the data?
+  </p>
+
+  <hr>
+
+  <h2>
+    Create the Table
+  </h2>
+
+  <p>
+    Now that we have data, we have to create the table to import it all. After looking at some of the data you should have a good idea of some of the column names and data types we'll need. Go ahead and make a short list of them. You don't have to make a complete list, 91 columns long, but try to find a column of a few different data types. What should be a varchar as opposed to a char? What about smallint as opposed to numeric?
+  </p>
+
+  <p>
+    After struggling with that for a bit, here's <a href="week-02/import.sql" target="_blank">the full INSERT statement</a>. Good ahead and run it in the analysis database.
+  </p>
+
+  <p>
+    Run <code>SELECT * FROM us_counties2010;</code> to see if it worked.
+  </p>
+
+  <hr>
+
+  <h2>
+    Import the Data
+  </h2>
+
+  <p>
+    Let's import all the data at once:
+  </p>
+
+  <pre>
+    <code>
+      COPY us_counties_2010
+      FROM '/path/to/us_counties_2010.csv'
+      WITH (FORMAT CSV, HEADER);
+    </code>
+  </pre>
+
+  <p>
+    You should see a success message about 3143 rows being affected.
+  </p>
+
+  <hr>
+
+  <h3>
+    Inspect the Data
+  </h3>
+
+  <p>
+    Go ahead and run a SELECT query to view all the data. Did it get imported correctly?
+  </p>
+
+  <p>
+    If it did, congrats! Now try using what we learned yesterday to explore the data. Come up with 5 different SQL queries that answer certain questions you have about the data. Have fun exploring!
+  </p>
 </body>
 </html>
