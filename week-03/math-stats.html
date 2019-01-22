@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 06: Math and Stats</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+## Lecture .eight[06]
+
+# Math and Stats
+
+---
+class: middle
+
+# Agenda
+
+1. [ ] [Mathmatical Operators](#operators)
+2. [ ] [Working With Types](#types)
+3. [ ] [Examples](#examples)
+4. [ ] [Aggregate Functions](#aggregate)
+
+---
+name: operators
+
+# Mathematical Operators
+
+The usuals:
+```sql
++ - * / %
+```
+
+- exponent: .eight[3 ^ 4]
+- square root: .eight[|/ 9]
+- cube root: .eight[||/ 27]
+- factorial: .eight[4 !]
+
+---
+
+# SQL as a Calculator
+
+```sql
+SELECT 2 + 2;
+SELECT 3 ^ 4;
+SELECT 4 !;
+SELECT (7 + 8) * 9;
+```
+
+---
+
+# Math on Columns
+
+```sql
+SELECT qty,
+       price,
+       qty * price AS "Total Cost"
+FROM purchases;
+```
+
+The .eight[AS] keyword gives us an alias to label a computed column.
+
+---
+name: types
+
+# Working With Types
+
+- two integers return an integer
+- either as numeric returns a numeric
+- anything with floating point returns a double precision
+- exponent, factorial, and both root functions return numeric/floating-point even using integers
+
+---
+
+# Working With Types
+
+```sql
+SELECT 11 / 6;
+```
+This results in .eight[1], the remainder of .eight[5] gets removed to keep type as an integer.
+
+```sql
+SELECT 11.0 / 6;
+SELECT CAST (11 AS numeric(3,1)) / 6;
+```
+
+---
+name: examples
+class: middle, center
+
+# Examples
+
+---
+
+# Addition
+
+```sql
+SELECT geo_name,
+       state_us_abbreviation AS "st",
+       area_land + area_water AS "total_area"
+FROM us_counties_2010
+ORDER BY st ASC, total_area DESC;
+```
+
+---
+
+# Subtraction
+
+```sql
+SELECT geo_name
+       state_us_abbreviation AS "st",
+       p0010001 AS "Total",
+       p0010003 + p0010004 + p0010005 + p0010006 + p0010007
+           + p0010008 + p0010009 AS "All Races",
+       (p0010003 + p0010004 + p0010005 + p0010006 + p0010007
+           + p0010008 + p0010009) - p0010009 AS "Difference"
+FROM us_counties_2010
+ORDER BY "Difference" ASC;
+```
+
+---
+
+# Percentage
+
+```sql
+SELECT geo_name,
+       state_us_abbreviation AS "st",
+       (CAST (p0010006 AS numeric(8,1)) / p0010001) * 100 AS "pct_asian"
+FROM us_counties_2010
+ORDER BY "pct_asian" DESC;
+```
+
+---
+name: aggregate
+
+# Aggregate Functions
+
+- Previously, math was between columns for each record
+- We can also calculate single value from all values in single column
+- Examples: .eight[avg()] and .eight[sum()]
+
+---
+
+# Average
+
+```sql
+SELECT sum(p0010001) AS "County Sum",
+       round(avg(p0010001), 0) AS "County Average"
+FROM us_counties_2010;
+```
+
+---
+
+# Median
+
+```sql
+SELECT sum(p0010001) AS "County Sum",
+       round(avg(p0010001), 0) AS "County Average",
+       percentile_cont(.5)
+       WITHIN GROUP (ORDER BY p0010001) AS "County Median"
+FROM us_counties_2010;
+```
+
+---
+
+# Average vs Median
+
+- 98233 vs 25857
+- Almost 40 counties have population over a million
+- These high outliers skew averages
+- Around 1570 counties have less than 25857 people
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

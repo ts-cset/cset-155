@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 07: Relational Data</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+## Lecture .eight[07]
+
+# Relational Data
+
+---
+class: middle
+
+# Agenda
+
+1. [ ] [Types of Relationship](#relationships)
+2. [ ] [Basic Syntax](#syntax)
+3. [ ] [Key Columns](#keys)
+4. [ ] [Types of Joins](#joins)
+5. [ ] [Using Joins in other Queries](#other)
+
+---
+
+# Relational Data
+
+This table tracks employee AND department data.
+
+```md
+dept  location  first_name  last_name  salary
+----  --------  ----------  ---------  ------
+Tax   Atlanta   Nancy       Jones      62500
+Tax   Atlanta   Lee         Smith      59300
+IT    Boston    Soo         Nguyen     83000
+IT    Boston    Janet       King       95000
+```
+
+---
+
+# Relational Data
+
+- Small sample, but imagine more data
+- Split the data into two tables, one for each entity
+- Less redundant
+- More maintainable
+
+.fourteen[But how would we query it?]
+
+---
+name: relationships
+
+# Types of Relationships
+
+- One-to-One
+- One-to-Many
+- Many-to-Many
+
+---
+
+# One-to-One
+
+A single row in one table matches a single row in another.
+
+- Imagine two tables, committee_members and leadership_positions
+- Each member can only hold one position
+- Each position can only be held by one member
+
+---
+
+# One-to-One
+
+.center[![one-to-one relationship diagram](https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/CPT-Databases-OnetoOne.svg/500px-CPT-Databases-OnetoOne.svg.png)]
+
+---
+
+# One-to-Many
+
+A single row in one table has multiple matches in another table
+
+- Imagine two tables, car_makes and car_models
+- Each make can have many models
+- Each model can only have one make
+
+---
+
+# One-to-Many
+
+.center[![one-to-many relationship diagram](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/CPT-Databases-OnetoMany2.svg/500px-CPT-Databases-OnetoMany2.svg.png)]
+
+---
+
+# Many-to-Many
+
+Multiple rows from one table have multiple matches in another table.
+
+- Imagine two tables, students and courses
+- Each student can take multiple courses
+- Each course can be taken by multiple students
+
+---
+
+# Many-to-Many
+
+.center[![many-to-many relationship diagram](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/CPT-Databases-ManytoMany.svg/500px-CPT-Databases-ManytoMany.svg.png)]
+
+---
+name: syntax
+
+# Basic Syntax
+
+JOIN ... ON
+
+```sql
+SELECT *
+FROM table_a JOIN table_b
+ON table_a.primary_key = table_b.foreign_key;
+```
+
+Links one table to another by matching values contained in certain columns.
+
+---
+class: middle, center
+
+# [Download the Code](https://raw.githubusercontent.com/anthonydb/practical-sql/master/Chapter_06/Chapter_06.sql)
+
+Look at Listing 6-1
+
+---
+name: keys
+
+# Key Columns
+
+New SQL keywords:
+
+- .eight[CONSTRAINT]
+- .eight[PRIMARY KEY]
+- .eight[UNIQUE]
+- .eight[REFERENCES]
+
+---
+
+# Primary Key
+
+Column or collection of columns whose values uniquely identify each row in a table.
+
+- **Must** be unique
+- **Can't** be missing
+
+---
+
+# Foreign Key
+
+Reference to a primary key in another table that must already exist.
+
+- **Can** be empty
+- **Can** have duplicates in a table
+
+---
+
+# Constraints
+
+- Rules you create that your table must follow
+- Each rule has a name
+- Define primary and foreign keys
+- Learn more types later
+
+---
+
+# Constraints
+
+Departments:
+```sql
+CONSTRAINT dept_key PRIMARY KEY (dept_id)
+```
+
+Employees:
+```sql
+dept_id integer REFERENCES departments (dept_id),
+CONSTRAINT emp_key PRIMARY KEY (emp_id)
+```
+
+---
+
+# Unique
+
+- Not a key, but is a constraint
+- Guarantees unique values or combinations of values
+
+```sql
+CONSTRAINT dept_city_unique UNIQUE (dept, city)
+CONSTRAINT emp_dept_unique UNIQUE (emp_id, dept_id)  
+```
+
+---
+
+# Run The Query
+
+```sql
+SELECT *
+FROM employees JOIN departments
+ON employees.dept_id = departments.dept_id;
+```
+
+We've joined department data to the employee data on matching department IDs.
+
+---
+name: joins
+
+# Types of Joins
+
+- Inner Join
+- Left Join
+- Right Join
+- Full Outer Join
+- Cross Join
+
+---
+
+# Joins Defined By Example
+
+```sql
+CREATE TABLE schools_left (
+  id integer CONSTRAINT left_id_key PRIMARY KEY,
+  left_school varchar(30)
+);
+CREATE TABLE schools_right (
+  id integer CONSTRAINT right_id_key PRIMARY KEY,
+  right_school varchar(30)
+);
+```
+
+Insert the data, see Listing 6-3.
+
+---
+
+# Inner Join
+
+Get rows from both tables only on matches.
+
+```sql
+SELECT *
+FROM schools_left JOIN schools_right
+ON schools_left.id = schools_right.id;
+```
+
+Also .eight[INNER JOIN]
+
+---
+
+# Left Join
+
+All rows from the left table plus matches from right.
+
+```sql
+SELECT *
+FROM schools_left LEFT JOIN schools_right
+ON schools_left.id = schools_right.id;
+```
+
+Unmatched rows on right are empty.
+
+---
+
+# Right Join
+
+All rows from the right table plus matches from left.
+
+```sql
+SELECT *
+FROM schools_left RIGHT JOIN schools_right
+ON schools_left.id = schools_right.id;
+```
+
+Unmatched rows on left are empty.
+
+---
+
+# Full Outer Join
+
+All rows from both tables, matches aligned.
+
+```sql
+SELECT *
+FROM schools_left FULL OUTER JOIN schools_right
+ON schools_left.id = schools_right.id;
+```
+
+Unmatched rows are empty on both sides.
+
+---
+
+# Cross Join
+
+Every possible combination of rows from both tables.
+
+```sql
+SELECT *
+FROM schools_left CROSS JOIN schools_right;
+```
+
+Cross Join doesn't care about matches, so it doesn't use the .eight[ON] keyword.
+
+.eleven[Don't use Cross Join on large tables!!!]
+
+---
+
+# Which Join?
+
+- Inner: most common; see matching data using well-structured database
+- Left/Right: you want to see missing data; you know some won't match
+- Full Outer: less common; visualize how two tables will merge
+- Cross: rare; see all combinations
+
+---
+name: other
+
+# Filtering By NULL
+
+```sql
+SELECT *
+FROM schools_left LEFT JOIN schools_right
+ON schools_left.id = schools_right.id
+WHERE schools_right.id IS NULL;
+```
+
+Or the opposite using .eight[IS NOT NULL]
+
+---
+
+# Specifying Columns
+
+Try this:
+
+```sql
+SELECT id
+FROM schools_left LEFT JOIN schools_right
+ON schools_left.id = schools_right.id;
+```
+
+Which .eight[id] are you going to get?
+
+---
+
+# Specifying Columns
+
+```sql
+SELECT schools_left.id,
+       schools_left.left_school,
+       schools_right.right_school
+FROM schools_left LEFT JOIN schools_right
+ON schools_left.id = schools_right.id;
+```
+
+When there's ambiguity, prepend the column name with the table name:
+
+---
+
+# Simplify With Aliases
+
+```sql
+SELECT lt.id,
+       lt.left_school,
+       rt.right_school
+FROM schools_left AS lt LEFT JOIN schools_right AS rt
+ON lt.id = rt.id;
+```
+The .eight[AS] keyword creates an alias you can use within the query.
+
+---
+
+# Joining Multiple Tables
+
+Let's add two more tables to the mix:
+
+- enrollment for each school
+- grade levels taught in each school
+
+Look at Listing 6-12 to create the tables and insert the data.
+
+---
+
+# Joining Multiple Tables
+
+```sql
+SELECT lt.id, lt.left_school, en.enrollment, gr.grades
+FROM schools_left AS lt LEFT JOIN schools_enrollment AS en
+    ON lt.id = en.id
+LEFT JOIN schools_grades AS gr
+    ON lt.id = gr.id;
+```
+
+---
+
+# .fourteen[Exercises]
+
+Look at Listing 6-13:
+
+- Create a second US Counties table with census data from 2000
+- Import data using the [CSV file here](https://raw.githubusercontent.com/anthonydb/practical-sql/master/Chapter_06/us_counties_2000.csv)
+- Run the SELECT query.
+
+.fourteen[What is it doing?]
+
+---
+
+# .fourteen[Exercises]
+
+Which county had the greatest percentage loss of population between 2000 and 2010?
+
+*Bonus points if you can figure out why.*
+
+---
+
+# .fourteen[Exercises]
+
+The 2010 census data has 3,143 rows and the 2000 census data has 3,141. Using our knowledge of Joins and filtering by NULL, find out which counties don't exist in both tables.
+
+For the curious, look each of them up online and see why they don't exist anymore, or why they were created.
+
+---
+
+# .fourteen[Exercises]
+
+Go back to the Math lecture slides and look at the median problem.
+
+Find the median of the percent change in county population from 2000 to 2010.
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 05: Importing and Exporting Data</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+## Lecture .eight[05]
+
+# Importing and Exporting Data
+
+---
+class: middle
+
+# Agenda
+
+1. [ ] Review Import Lab
+2. [ ] [COPY Syntax](#copy)
+3. [ ] [WITH Options](#with)
+4. [ ] [Import](#import)
+5. [ ] [Export](#export)
+
+---
+name: copy
+
+# COPY Syntax
+
+```sql
+COPY table_name
+FROM/TO 'path/to/file.csv'
+WITH (options);
+```
+
+1. Choose between .eight[FROM] and .eight[TO]
+2. Change the file path
+3. Add your options
+
+---
+name: with
+
+# WITH Options
+
+- Format
+- Header
+- Delimiter
+- Quote
+
+---
+
+# Format
+
+Input and output formatting?
+
+- CSV: most common format
+- TEXT: more generic structure
+- BINARY: series of bytes, least common
+
+```sql
+WITH (FORMAT CSV);
+```
+
+---
+
+# Header
+
+Is the data labeled?
+
+```csv
+FIRSTNAME,LASTNAME,LANGUAGES
+Zach,Fedor,"JavaScript,Python"
+```
+
+If so, don't import first row as data!
+
+```sql
+WITH (FORMAT CSV, HEADER);
+```
+
+---
+
+# Delimiter
+
+What separates each piece of data?
+
+- CSV defaults to comma
+- TEXT defaults to tab
+- Must be single character!
+- Can't be carriage return, that means a new record!
+
+```sql
+WITH (FORMAT TEXT, DELIMITER '|');
+```
+
+---
+
+# Quote
+
+What specifies an ambiguous single value?
+
+- Imagine "eggs, milk, bread" as one piece of data for grocery list column.
+- Without quotes, it becomes three separate pieces of data.
+- Default is double quote: .eight["]
+
+```sql
+WITH (FORMAT CSV, QUOTE '"');
+```
+
+---
+name: import
+
+# Import
+
+```sql
+COPY us_counties_2010
+FROM 'path/to/us_counties_2010.csv'
+WITH (FORMAT CSV, HEADER);
+```
+
+Using this table, import data from this csv file that
+has a header line, using the rest of the default options.
+
+---
+
+# Import Subset Of Columns
+
+```sql
+COPY table_name (col_one, col_two)
+FROM 'path/to/file.csv'
+WITH (FORMAT CSV, HEADER);
+```
+
+Your table has more columns than your file, so what goes where?
+
+---
+
+# Import Default Values
+
+This is tricky, but can be done by importing into a temporary table then copying again into the real table with any defaults.
+
+---
+name: export
+
+# Export
+
+```sql
+COPY us_counties_2010
+TO 'path/to/us_counties_2010_export.csv'
+WITH (FORMAT CSV, HEADER);
+```
+
+Same as import, but using .eight[TO]. Only use .eight[.csv] file extension if it's truly a CSV format, otherwise use .eight[.txt].
+
+---
+
+# Export Subset Of Columns
+
+```sql
+COPY table_name (col_one, col_two)
+TO 'path/to/file.txt'
+WITH (FORMAT CSV, HEADER, DELIMITER '|');
+```
+
+Same as importing subset, but again using .eight[TO] and showing other valid options for .eight[WITH].
+
+---
+
+# Export Query Results!
+
+```sql
+COPY (
+  SELECT geo_name, state_us_abbreviation
+  FROM us_counties_2010
+  WHERE geo_name ILIKE '%mill%'
+)
+TO 'path/to/export.csv'
+WITH (FORMAT CSV, HEADER);
+```
+
+---
+class: middle, center
+
+or you can use pgAdmin interface...
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
