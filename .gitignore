@@ -1,0 +1,4 @@
+*.csv
+*.sql
+!week-02/create-table.sql
+
