@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 08: Table Design</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+## Lecture .eight[08]
+
+# Table Design
+
+---
+class: middle
+
+# Agenda
+
+1. [ ] [Case Conventions](#case)
+2. [ ] [Table Design Rules](#rules)
+3. [ ] [More on Constraints](#constraints)
+4. [ ] [Altering Tables](#alter)
+5. [ ] [Indexes](#indexes)
+
+---
+class: center, middle
+
+# [Get the Code for Today](https://raw.githubusercontent.com/anthonydb/practical-sql/master/Chapter_07/Chapter_07.sql)
+
+(right click and "Save Link As..." or just keep open in new tab)
+
+---
+name: case
+
+# Case Conventions
+
+- .eight[camelCase]
+- .eight[PascalCase]
+- .eight[snake_case]
+
+Depends on your company. And if you choose one, stick with it!
+
+---
+
+# Case Conventions
+
+Values in SQL are case insensitive.
+
+```sql
+CREATE TABLE customers;
+CREATE TABLE Customers;
+```
+
+The second query will .eleven[fail] if run after the first, unless you use double-quotes:
+
+```sql
+CREATE TABLE "Customers";
+```
+
+---
+
+# Problems with Quotes
+
+If you use quotes to create a case-sensitive table, you **always** have to use quotes to refer to it:
+
+```sql
+SELECT * FROM customers;
+SELECT * FROM Customers;
+SELECT * FROM "Customers";
+```
+The first two queries are the same. 
+
+---
+
+# Problems with Quotes
+
+You can also use quotes to escape reserved words and characters:
+
+```sql
+CREATE TABLE "CREATE TABLE";
+```
+
+---
+class: center, middle
+
+![i also like to live dangerously](https://media0.giphy.com/media/kYkQYXkO3XyRa/giphy.gif?cid=3640f6095c4f13f56671465a36c99ae1)
+
+---
+name: rules
+
+# Rules to Avoid Danger
+
+1. Stick with snake_case
+2. Use proper names, not cryptic abbreviations
+3. Watch out for length limits on names
+4. Pluralize your table names
+5. Use constraints!
+
+---
+name: constraints
+
+# More on Constraints
+
+Table or Column Constraint?
+
+- Data Types
+- [Primary Key](#pk)
+- [Foreign Key](#fk)
+- [Unique](#unique)
+- [Check](#check)
+- [Not Null](#null)
+
+Both are created in the .eight[CREATE TABLE] statement, but they are checked at different times.
+
+---
+name: pk
+
+# Primary Keys: Natural or Surrogate?
+
+- Natural:
+  - License Plate, Book ISBN, Product SKU, etc.
+  - Already exist, so no extra column is needed
+  - Already have meaning
+- Surrogate:
+  - Serial integers, UUID, or custom values
+  - Intentionally don't have meaning
+  - Can save space depending on data type
+
+---
+
+# Primary Keys: Syntax
+
+.fourteen[Run Listing 7-1]
+
+- Column constraint syntax in the first statement
+- Table constraint syntax in the second
+- .eight[DROP TABLE] deletes a table from the database
+
+.fourteen[Run Listing 7-2 to see a key violation error]
+
+What is the reason for the two different syntaxes?
+
+---
+
+# Primary Keys: Composite Keys
+
+.fourteen[Run Listing 7-3]
+
+- Table constraint syntax allows for comma-separated list
+- Column constraint syntax is quicker and more readable for single column keys
+
+.fourteen[Run Listing 7-4 to see another key violation error]
+
+---
+
+# Primary Keys: Surrogate Keys
+
+- If there isn't a natural key, use a surrogate
+- If you don't know which surrogate, use .eight[bigserial]
+
+.fourteen[Listing 7-5 shows use of bigserial]
+
+There are reasons to avoid auto-incrementing keys, but if you don't know them, don't bother.
+
+---
+name: fk
+
+# Foreign Keys: Syntax
+
+Just like Primary Keys, Foreign Keys help maintain .eight[referential integrity].
+
+.fourteen[Run Listing 7-6 one query at a time.]
+
+How many keys do these tables have?
+
+---
+count: false
+
+# Foreign Keys: Syntax
+
+Just like Primary Keys, Foreign Keys help maintain .eight[referential integrity].
+
+.fourteen[Run Listing 7-6 one query at a time.]
+
+How many keys do these tables have?
+
+1. First table has a natural primary key
+2. Second table has a natural composite primary key
+3. Second table has a foreign key
+
+Did you get an error? Should you have?
+
+---
+
+# Foreign Keys: Cascading Delete
+
+- Attempting to insert a reference that doesn't exist should fail.
+- What about removing a reference already in use?
+
+```sql
+CREATE TABLE registrations (
+  registration_id varchar(10),
+  registration_date date,
+  license_id varchar(10) REFERENCES licenses (license_id) ON DELETE CASCADE,
+  CONSTRAINT registration_key PRIMARY KEY (registration_id, license_id)
+);
+```
+
+---
+name: check
+
+# Check
+
+- Like PKs, can be column or table constraints
+- Inserts must pass a logical expression:
+
+```sql
+age date CHECK (age &gt; '1900-01-01 00:00:00'),
+```
+```sql
+CONSTRAINT grad_check CHECK (credits &gt;= 120 AND tuition = 'PAID')
+```
+
+.fourteen[Run Listing 7-7]
+
+---
+
+# Check
+
+Great Debate:
+
+- Logic in the database?
+- Logic in the code?
+- Both?
+
+---
+name: unique
+
+# Unique
+
+One difference between Primary Key and Unique: NULL
+
+.fourteen[Run Listing 7-8 to see an example]
+
+---
+name: null
+
+# Not Null
+
+When you need values.
+
+.fourteen[Run Listing 7-9]
+
+---
+name: alter
+
+# Altering Tables
+
+So you made a constraint and now you don't want to follow it:
+
+```sql
+ALTER TABLE table_name DROP CONSTRAINT constraint_name;
+```
+Or
+```sql
+ALTER TABLE table_name ALTER COLUMN col_name DROP NOT NULL;
+```
+
+.fourteen[Run Listing 7-10]
+
+---
+
+# Altering Tables
+
+Quick note:
+
+.eleven[You can only add a constraint if the data already follows it.]
+
+---
+class: middle, center
+
+# .eight[Who's ready to work with a million records?]
+
+---
+name: indexes
+
+# Indexes
+
+Speed up queries by using a shortcut, like indexes in books.
+
+PostgreSQL offers a few types:
+
+- Balanced-Tree Index
+- Generalized Inverted Index
+- Generalized Search Tree
+
+Primary Keys and Unique constraints automatically create indexes.
+
+---
+
+# Indexes
+
+1. Right click [this link](https://raw.githubusercontent.com/anthonydb/practical-sql/master/Chapter_07/city_of_new_york.csv) and save the CSV file
+2. It's data for 940,374 addresses in New York City
+3. Use .fourteen[Listing 7-11] to create the table and import the file
+4. Verify it worked with a quick .eight[SELECT *] query
+5. Use .fourteen[Listing 7-12] to run some benchmark queries
+
+You should see a line with .eight[Execution time:] in the output. Record the time for each query.
+
+---
+
+# Indexes
+
+Let's make it run a little faster:
+
+```sql
+CREATE INDEX street_idx ON new_york_addresses (street);
+```
+
+.eleven[Note: EXPLAIN and CREATE INDEX are Postgres-specific.]
+
+1. Run this command and Postgres will build the index from the data
+2. Now rerun the benchmark queries again and record their new times
+3. Be amazed.
+
+---
+
+# Indexes
+
+- Add size and maintenance costs
+- Look at what kind of indexes exist on your DBMS
+- Use indexes on columns you'll use in JOINs
+- Use indexes on columns used in WHERE clauses
+- Use EXPLAIN to test performance, just in case
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
