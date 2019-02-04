@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 09: Aggregate Functions</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+## Lecture .eight[09]
+
+# Aggregate Functions
+
+---
+class: middle
+
+# Agenda
+
+1. [ ] [Import Data](#setup)
+2. [ ] [Counting Rows and Values](#count)
+3. [ ] [Finding Min/Max Values](#min-max)
+4. [ ] [Aggregate Using Group](#group)
+5. [ ] [Revisiting Sum](#sum)
+
+---
+name: setup
+class: center, middle
+
+# [Get the Code for Today](https://raw.githubusercontent.com/anthonydb/practical-sql/master/Chapter_08/Chapter_08.sql)
+
+(right click and "Save Link As..." or just keep open in new tab)
+
+---
+
+# Public Library Data
+
+- Look over the [Data Dictionary](https://www.imls.gov/sites/default/files/fy2014_pls_data_file_documentation.pdf) to understand the columns, data types, and values
+- Download [2014 Survey](https://raw.githubusercontent.com/anthonydb/practical-sql/master/Chapter_08/pls_fy2014_pupld14a.csv) data
+- Download [2009 Survey](https://raw.githubusercontent.com/anthonydb/practical-sql/master/Chapter_08/pls_fy2009_pupld09a.csv) data
+
+.fourteen[Use Listing 8-1 and Listing 8-2 to create and import both tables.]
+
+---
+
+# Public Library Data
+
+Notes:
+- .eight[fscskey] is unique to each library, so it's a perfect natural primary key
+- Many of the columns have the .eight[NOT NULL] constraint because they were required answers in the survey.
+- The CSV has a column named .eight[database] but that's a SQL keyword, so we had to rename it.
+- Some columns, like .eight[startdat] and .eight[enddat] contain dates, but we have to use the .eight[varchar] type because of missing values.
+
+---
+name: count
+
+# Counting Rows
+
+How many rows are in these tables?
+
+```sql
+SELECT count(*)
+FROM pls_fy2014_pupld14a;
+
+SELECT count(*)
+FROM pls_fy2009_pupld09a;
+```
+
+The asterisk acts as a wildcard, so a row will count regardless of .eight[NULL] values.
+
+---
+
+# Counting Values
+
+How many rows have values in a certain column?
+
+```sql
+SELECT count(salaries)
+FROM pls_fy2014_pupld14a;
+```
+
+Only .eight[5,983] out of .eight[9,305] libraries reported salary info.
+
+Use this check to evaluate how thorough your analysis is.
+
+---
+
+# Counting Distinct Values
+
+```sql
+SELECT count(libname)
+FROM pls_fy2014_pupld14a;
+
+SELECT count(DISTINCT libname)
+FROM pls_fy2014_pupld14a;
+```
+
+The first matches the total number of rows which makes sense: each library should have a name.
+
+.fourteen[Does the second make sense?]
+
+---
+name: min-max
+
+# Finding Min/Max Values
+
+```sql
+SELECT max(visits), min(visits)
+FROM pls_fy2014_pupld14a;
+```
+
+.fourteen[How can a library have negative visits?]
+
+---
+
+# Finding Min/Max Values
+
+A common convention is to use "nonsense" values in a column that fit the data type as a code for specific meanings.
+
+For this survey:
+- .eight[-1] means the library didn't answer the question
+- .eight[-3] means the column isn't applicable to the library
+
+.eleven[A better way is to separate the value and info about the value into separate column.]
+
+---
+name: group
+
+# Aggregate Using Groups
+
+On it's own .eight[GROUP BY] looks just like .eight[DISTINCT]:
+
+```sql
+SELECT DISTINCT stabr
+FROM pls_fy2014_pupld14a
+ORDER BY stabr;
+
+SELECT stabr
+FROM pls_fy2014_pupld14a
+GROUP BY stabr
+ORDER BY stabr;
+```
+
+.fourteen[So why use GROUP BY?]
+
+---
+
+# Aggregate Using Groups
+
+```sql
+SELECT stabr, count(*)
+FROM pls_fy2014_pupld14a
+GROUP BY stabr
+ORDER BY count(stabr) DESC;
+```
+
+If you SELECT individual columns with an aggregate function, you .eleven[must] include those columns in the GROUP BY clause.
+
+---
+
+# Group Using Multiple Columns
+
+```sql
+SELECT stabr, stataddr, count(*)
+FROM pls_fy2014_pupld14a
+GROUP BY stabr, stataddr
+ORDER BY stabr ASC, count(*) DESC;
+```
+
+stataddr values:
+- .eight[00] = No address change
+- .eight[07] = Moved to new address
+- .eight[15] = Minor address change
+
+---
+name: sum
+
+# Revisiting Sum
+
+```sql
+SELECT sum(visits) AS visits_2014
+FROM pls_fy2014_pupld14a
+WHERE visits &gt;= 0;
+
+SELECT sum(visits) AS visits_2009
+FROM pls_fy2009_pupld09a
+WHERE visits &gt;= 0;
+```
+
+But we know there's a different number of rows in each table, so let's get a better comparison...
+
+---
+
+# Revisiting Sum
+
+```sql
+SELECT sum(pls14.visits) AS visits_2014,
+       sum(pls09.visits) AS visits_2009
+FROM pls_fy2014_pupld14a pls14 JOIN pls_fy2009_pupld09a pls09
+ON pls14.fscskey = pls09.fscskey
+WHERE pls14.visits &gt;= 0 AND pls09.visits &gt;= 0;
+```
+
+Okay, so library visits are still dropping for the US as a whole, but how about a state by state comparison?
+
+---
+
+# Putting It All Together
+
+```sql
+SELECT pls14.stabr,
+       sum(pls14.visits) AS visits_2014,
+       sum(pls09.visits) AS visits_2009,
+       round( (CAST(sum(pls14.visits) AS decimal(10,1)) - sum(pls09.visits)) /
+                    sum(pls09.visits) * 100, 2 ) AS pct_change
+FROM pls_fy2014_pupld14a pls14 JOIN pls_fy2009_pupld09a pls09
+ON pls14.fscskey = pls09.fscskey
+WHERE pls14.visits &gt;= 0 AND pls09.visits &gt;= 0
+GROUP BY pls14.stabr
+ORDER BY pct_change DESC;
+```
+
+---
+name: having
+
+# Filter Aggregate Query Results
+
+.eight[WHERE] filters by row in the table, .eight[HAVING] filters by group results.
+
+```sql
+-- ...
+-- GROUP BY pls14.stabr
+HAVING sum(pls14.visits) &gt; 50000000
+-- ORDER BY pct_change DESC;
+```
+
+---
+
+# .fourteen[Exercises]
+
+Library visits have declined, but what about use of technology? Modify the previous two queries to use two different columns:
+
+- .eight[gpterms] - number of internet-connected computers for public use
+- .eight[pitusr] - number of uses for these computers
+
+Can you find the percent change in the sum of each column over time?
+
+---
+
+# .fourteen[Exercises]
+
+Both tables contain a column called .eight[obereg], a two-digit code for region. Just like we calculated percent change of visits grouped by state, do the same grouped by region.
+
+Look at the survey's documentation to figure out what the regions are.
+
+---
+
+# .fourteen[Exercises]
+
+Let's not forget how to use joins!
+
+Write a query that will show all the rows in both tables, including those without matches, and add an .eight[IS NULL] filter to show agencies not included in or the other table.
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
