@@ -237,13 +237,37 @@ SELECT * FROM meat_poultry_egg_inspect;
 
 # .fourteen[Exercises]
 
-Earlier, we learned that three rows don't have a value in their .eight[st] column. Find the rows, then use their zip codes to figure out what state they're in.
+For each exercise:
 
-Use an UPDATE query to fix the rows.
+- Go slowly, and try not to run queries without knowing what they'll do.
+- Always write a .eight[SELECT] query to double check your work.
+- If you screw up, drop the table and make a new copy using your backup.
 
 ---
 
 # .fourteen[Exercises]
+
+Earlier, we learned that three rows don't have a value in their .eight[st] column. Find the rows, then use their zip codes to figure out what state they're in.
+
+Use an UPDATE query to fix the rows.
+
+(Don't worry about screwing up, you made a backup. Right?)
+
+---
+
+# .fourteen[Exercises]
+
+Now let's try to fix those spelling inconsistencies:
+
+- Make a new column called .eight[company_standard] with the same data type as .eight[company].
+- Use a single query to copy the values from each row's .eight[company] column to the new column.
+- Write a single .eight[UPDATE] query for each company that needs a standard name, using .eight[WHERE] as a proper filter.
+
+---
+
+# .fourteen[Exercises]
+
+For the zip code fix, look up the double pipe (.eight[||]) operator. Write two .eight[UPDATE] queries, one to fix all the 4 letter codes at once and another to fix the 3 letter codes, that use this new operator and an appropriate .eight[WHERE] clause.
 
 
     </textarea>
