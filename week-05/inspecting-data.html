@@ -30,6 +30,7 @@ class: middle
 3. [ ] [Modifying Tables and Columns](#mod)
 4. [ ] [Modify Values](#update)
 5. [ ] [Make a Backup](#backup)
+6. [ ] [Deleting Data](#delete)
 
 ---
 name: setup
@@ -269,6 +270,37 @@ Now let's try to fix those spelling inconsistencies:
 
 For the zip code fix, look up the double pipe (.eight[||]) operator. Write two .eight[UPDATE] queries, one to fix all the 4 letter codes at once and another to fix the 3 letter codes, that use this new operator and an appropriate .eight[WHERE] clause.
 
+---
+name: delete
+
+# Appendix: Deleting Stuff!
+
+Delete all rows in a table:
+```sql
+DELETE FROM table;
+```
+
+Delete certain rows:
+```sql
+DELETE FROM table WHERE criteria;
+```
+
+---
+
+# Appendix: Deleting Stuff!
+
+And finally, delete an entire table from the database:
+```sql
+DROP TABLE table;
+```
+
+---
+
+# Appendix: Deleting Stuff!
+
+These delete queries will fail if you're removing data that's used in Foreign Key constraints, unless you're using cascading delete.
+
+.eleven[Beware]
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
