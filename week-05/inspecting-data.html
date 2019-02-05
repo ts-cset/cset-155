@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 10: Inspecting Data</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+## Lecture .eight[10]
+
+# Inspecting Data
+
+---
+class: middle
+
+# Agenda
+
+1. [ ] [Import Data](#setup)
+2. [ ] [Interviewing Data](#interview)
+3. [ ] [Modifying Tables and Columns](#mod)
+4. [ ] [Modify Values](#update)
+5. [ ] [Make a Backup](#backup)
+
+---
+name: setup
+class: center, middle
+
+# [Get the Code for Today](https://raw.githubusercontent.com/anthonydb/practical-sql/master/Chapter_09/Chapter_09.sql)
+
+(right click and "Save Link As..." or just keep open in new tab)
+
+---
+
+# USDA Food Inspection Directory
+
+This isn't the biggest or most complicated database you've seen, but it definitely has the dirtiest data.
+
+- Download the [CSV file](https://raw.githubusercontent.com/anthonydb/practical-sql/master/Chapter_09/MPI_Directory_by_Establishment_Name.csv)
+- Use .fourteen[Listing 9-1] to create and import the table.
+- For practice, use the .eight[count(*)] function in a query to make sure there are .eight[6,287] rows.
+
+---
+name: interview
+
+# Interviewing Data
+
+Think of this like a job interview:
+
+- What all does the data hold?
+- What is it good at?
+- What questions can it answer?
+- How clean is it?
+
+These are important things to know before we do any analysis, and aggregate functions can help.
+
+---
+
+For example, we might assume that each company in each row operates at its own address. .fourteen[Is that true?]
+
+```sql
+SELECT company,
+       street,
+       city,
+       st,
+       count(*) AS address_count
+FROM meat_poultry_egg_inspect
+GROUP BY company, street, city, st
+HAVING count(*) &gt; 1
+ORDER BY company, street, city, st;
+```
+
+---
+
+We can also check for missing values. For example, how many of these companies are in each state?
+
+```sql
+SELECT st, 
+       count(*) AS st_count
+FROM meat_poultry_egg_inspect
+GROUP BY st
+ORDER BY st;
+```
+.fourteen[Why are there more than 50 rows?]
+
+---
+
+Our last query had .eight[null] values in the state column, which probably isn't good. Let's find them and see how we should fix them.
+
+```sql
+SELECT est_number,
+       company,
+       city,
+       st,
+       zip
+FROM meat_poultry_egg_inspect
+WHERE st IS NULL;
+```
+
+---
+
+Even if data isn't missing, it can be inconsistent. Let's see how many company names are misspelled: 
+
+```sql
+SELECT company,
+       count(*) AS company_count
+FROM meat_poultry_egg_inspect
+GROUP BY company
+ORDER BY company ASC;
+```
+
+---
+
+We can also look for malformed data, values that we know shouldn't be able to exist. For example, we know zip codes should only be five digits:
+
+```sql
+SELECT length(zip),
+       count(*) AS length_count
+FROM meat_poultry_egg_inspect
+GROUP BY length(zip)
+ORDER BY length(zip) ASC;
+```
+
+---
+
+Looks like leading zeros got stripped from the beginning of our numbers, but let's double check.
+
+```sql
+SELECT st,
+       count(*) AS st_count
+FROM meat_poultry_egg_inspect
+WHERE length(zip) &lt; 5
+GROUP BY st
+ORDER BY st ASC;
+```
+All of them come from states in the northeast, where zip codes start with zero.
+
+---
+
+# Things to Fix
+
+We found a nice little list so far:
+
+- Missing values in the state column
+- Inconsistent spelling of company names
+- Inaccurate zip codes from the file conversion
+
+---
+
+# Modifying Tables and Columns
+
+Add a column:
+```sql
+ALTER TABLE table ADD COLUMN column data_type;
+```
+
+Remove a column:
+```sql
+ALTER TABLE table DROP COLUMN column;
+```
+
+---
+
+Change a column's data type:
+```sql
+ALTER TABLE table ALTER COLUMN column SET DATA TYPE data_type;
+```
+
+Add a NOT NULL constraint to a column:
+```sql
+ALTER TABLE table ALTER COLUMN column SET NOT NULL;
+```
+
+Remove a NOT NULL constraint:
+```sql
+ALTER TABLE table ALTER COLUMN column DROP NOT NULL;
+```
+
+---
+name: update
+
+# Modifying Values
+
+```sql
+UPDATE table SET column = value;
+```
+This is the basic form, but isn't that helpful. It changes every value of every record. Try this instead:
+
+```sql
+UPDATE table SET column = value
+WHERE criteria;
+```
+
+---
+
+You can change multiple values at once with:
+
+```sql
+UPDATE table
+SET column1 = value1,
+    column2 = value2;
+```
+
+---
+
+And you can use sub-queries to use values from other tables:
+
+```sql
+UPDATE table
+SET column = table_b.column
+FROM table_b
+WHERE table.column = table_b.column;
+```
+
+---
+name: backup
+
+# Backups
+
+Let's make a backup of the data in case we screw anything up:
+
+```sql
+CREATE TABLE meat_poultry_egg_inspect_backup AS
+SELECT * FROM meat_poultry_egg_inspect;
+```
+
+---
+
+# .fourteen[Exercises]
+
+Earlier, we learned that three rows don't have a value in their .eight[st] column. Find the rows, then use their zip codes to figure out what state they're in.
+
+Use an UPDATE query to fix the rows.
+
+---
+
+# .fourteen[Exercises]
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
