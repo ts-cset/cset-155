@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 02: Creating Your First Database</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle,
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+# Data Modeling
+
+---
+class: middle
+
+# Agenda
+
+- [ ] Review Terms
+- [ ] Review Portal Spreadsheets
+
+---
+class: middle
+
+# .eight[Data]
+
+- "Facts or information usually used to calculate, analyze, or plan something"
+- "Facts or statistics collected together for reference or analysis"
+- "Information or knowledge represented in a form suitable for processing"
+
+---
+class: middle
+
+# .eight[Database]
+
+"An organized collection of data."
+
+---
+class: middle
+
+# .eight[Database Management System]
+
+"Software that interacts with the database, applications, and users."
+
+# .eleven[DB != DBMS]
+
+---
+class: middle
+
+# .eight[Data Type]
+
+"The data's role, it defines how it is stored and how it can be processed."
+
+---
+class: middle
+
+# .eight[CRUD Operations]
+
+"Create, Read, Update, Delete"
+
+---
+class: middle
+
+# .eight[Data Modeling]
+
+"A formal process for finding required data and relationships."
+
+---
+class: middle
+
+# .fourteen[Review]
+
+# Use a spreadsheet to capture and structure some data that might be found in the school portal.
+
+---
+class: middle
+
+# An Informal Data Modeling Process
+
+1. Separate all the categories of data
+  - .fourteen[What are the unique things?]
+2. Define their properties
+  - .fourteen[What makes them unique?]
+3. Map out their relationships
+  - .fourteen[How do they fit into the big picture?]
+
+---
+class: middle, center
+
+# .seven[Generic Category]
+## .eight[Specific Example]
+### .nine[Aspect of Example]
+
+---
+class: middle, center
+
+# .seven[User]
+## .eight[*Me*]
+### .nine["Zach Fedor"]
+
+---
+class: middle, center
+
+# .seven[User]
+## .eight[*You*]
+### .nine[your name]
+
+---
+class: middle, center
+
+# .seven[Course]
+## .eight[*This One*]
+### .nine["CSET-155"]
+
+---
+class: middle, center
+
+# .seven[Course]
+## .eight[*This One*]
+### .nine["M,T 12:00-4:30"]
+
+---
+class: middle, center
+
+# .seven[Entity Type]
+## .eight[Entity]
+### .nine[Attribute]
+
+???
+Class, Instance, Property
+Prototype, Object Instance, Property
+
+---
+class: middle, center
+
+# .seven[Sheet  ->  Table]
+## .eight[Row  ->  Record]
+### .nine[Column  ->  Field]
+
+---
+
+# Important Note
+
+## .eight[Don't think about interfaces yet.]
+
+A single web page might contain hundreds of entities of different types, or it could contain a fraction of attributes from a single entity.
+
+---
+
+# Interfaces
+
+Imagine the entities found in
+
+- A blogging site
+- A social media app
+- A weather app
+
+---
+
+# .fourteen[Lab: Data Modeling]
+
+Choose a real application to data model in a new spreadsheet. Create a new sheet for each entity type, list its attributes in columns as headers, and fill out rows with at least four entities per type.
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
