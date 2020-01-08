@@ -18,109 +18,51 @@ class: middle
 
 ## Lecture .eight[02]
 
-# Creating Your First Database
+# Creating A Database
 
 ---
 class: middle
 
 # Agenda
 
-- [ ] Review Terms
-- [ ] Portal Spreadsheets
-- [ ] Install PostgreSQL
+- [ ] [Review Terms](#terms)
+- [ ] [Install PostgreSQL](#install)
 - [ ] Make a Database!
 
 ---
-class: middle
+name: terms
 
-# .eight[Data]
+# Terms
 
-- "Facts or information usually used to calculate, analyze, or plan something"
-- "Facts or statistics collected together for reference or analysis"
-- "Information or knowledge represented in a form suitable for processing"
-
----
-class: middle
-
-# .eight[Database]
-
-"An organized collection of data."
+1. Database
+2. Database Management System
+3. Data Type
+4. CRUD Operations
+5. Data Modeling
 
 ---
-class: middle
 
-# .eight[Database Management System]
+# Definitions
 
-"Software that interacts with the database, applications, and users."
-
-# .eleven[DB != DBMS]
-
----
-class: middle
-
-# .eight[Data Type]
-
-"The data's role, it defines how it is stored and how it can be processed."
-
----
-class: middle
-
-# .eight[CRUD Operations]
-
-"Create, Read, Update, Delete"
-
----
-class: middle
-
-# .eight[Data Modelling]
-
-"A formal process for finding required data and relationships."
-
----
-class: middle
-
-# .fourteen[Review]
-
-# Use a spreadsheet to capture and structure some data that might be found in the school portal.
+1. An organized collection of data.
+2. Software that interacts with the database, applications, and users.
+3. The data's role; how it is stored and how it can be processed.
+4. Create, Read, Update, Delete
+5. A formal process for finding required data and relationships.
 
 ---
 class: middle, center
 
-# .seven[Generic Idea or Type]
+# .seven[Generic Category]
 ## .eight[Specific Example]
 ### .nine[Aspect of Example]
 
 ---
 class: middle, center
 
-# .seven[Teacher]
-## .eight[*Me*]
-### .nine["Zach Fedor"]
-
----
-class: middle, center
-
-# .seven[Course]
-## .eight[*This One*]
-### .nine["CSET-155"]
-
----
-class: middle, center
-
-# .seven[Course]
-## .eight[*This One*]
-### .nine["M,T 12:00-4:30"]
-
----
-class: middle, center
-
-# .seven[Entity]
-## .eight[Item]
+# .seven[Entity Type]
+## .eight[Entity]
 ### .nine[Attribute]
-
-???
-Class, Instance, Property
-Prototype, Object Instance, Property
 
 ---
 class: middle, center
@@ -130,6 +72,7 @@ class: middle, center
 ### .nine[Column  ->  Field]
 
 ---
+name: install
 
 # Install PostgreSQL
 
@@ -138,7 +81,7 @@ $ brew update
 $ brew install postgresql
 $ brew services start postgresql
 $ psql -V
-psql (PostgreSQL) 11.1
+psql (PostgreSQL) 12.1
 ```
 
 ---
@@ -149,19 +92,20 @@ psql (PostgreSQL) 11.1
 $ brew cask install pgadmin4
 ```
 
+pgAdmin is a web interface for our Postgres databases.
+
 ---
 
-# Connect PGAdmin to Postgres
+# Connect pgAdmin to Postgres
+
+.eleven[You should only have to do this once.]
 
 - Open pgAdmin using Spotlight
 - Click "Add New Server"
 - General > Name: type .fourteen[localhost]
 - Connection > Hostname/addres: type .fourteen[localhost]
 - Add your **computer** username and leave password blank
-  - run .fourteen[whoami] in your terminal to find your username
 - Click "Save"
-
-.eleven[You should only have to do this once.]
 
 ---
 
@@ -222,8 +166,9 @@ Query returned successfully in 709 msec.
 
 # Creating a Table
 
-- Where data lives and relationships are defined
-- Create the .eight[columns]
+Where data lives and relationships are defined
+
+- Create the .eight[columns] for attributes, almost like variables
 - Assign each column a .eight[data type]
   - For example, dates can be stored as YYYY-MM-DD
 
@@ -232,13 +177,11 @@ Query returned successfully in 709 msec.
 # Your First Table
 
 ```sql
-CREATE TABLE teachers (
+CREATE TABLE users (
   id bigserial,
-  first_name varchar(25),
-  last_name varchar(50),
-  school varchar(50),
-  hire_date date,
-  salary numeric
+  name varchar(50),
+  email varchar(50),
+  registered date
 );
 ```
 
@@ -246,9 +189,9 @@ CREATE TABLE teachers (
 
 # Your First Table
 
-- Not comprehensive, enough to get us started
-- 2 Keywords + Value: CREATE, TABLE, teachers
-- Newlines or tabs are just for readability
+- Small example just to get us started
+- 2 Keywords + Value: CREATE, TABLE, users
+- Newlines and tabs are for readability
 - Each column name represents one discrete data element defined by a data type
   - bigserial, varchar, date, etc.
   - We'll learn more later
@@ -258,12 +201,21 @@ CREATE TABLE teachers (
 # Inserting Data
 
 ```sql
-INSERT INTO teachers (first_name, last_name, school, hire_date, salary)
-VALUES ('Janet', 'Smith', 'FD Roosevelt HS', '2011-10-30', 36200),
-  ('Lee', 'Reynolds', 'FD Roosevelt HS', '1993-05-22', 65000),
-  ('Samantha', 'White', 'Myers Middle School', '2005-08-01', 43500),
-  ('Carmen', 'Diaz', 'FD Roosevelt HS', '2011-10-30', 36200);
+INSERT INTO users (name, email, registered)
+VALUES ('Amy', 'amy@example.com', '2017-10-30'),
+  ('Bob', 'bob@hotmail.com', '2018-05-22'),
+  ('Carmen', 'carmen@aol.com', '2015-08-01'),
+  ('Dave', 'dave@fastmail.com', '2019-07-30');
 ``` 
+
+---
+class: middle, center
+
+# Did it work?
+
+```
+Query returned successfully: 4 rows affected.
+```
 
 ---
 class: middle, center
@@ -279,24 +231,20 @@ class: middle, center
 
 # bigserial
 
----
-class: middle, center
-
-# Did it work?
-
-```
-Query returned successfully: 4 rows affected.
-```
+_Don't worry, we'll learn more later_
 
 ---
+class: middle
 
-# .fourteen[Practice]
+# .fourteen[Review Lab]
 
-- Make a new database called .eight[portal]
-- Create a table for each of your sheets, adding all the necessary fields
-- Insert your records into each table
+# Data Modeling in a Spreadsheet
 
-.eleven[Make sure you don't add the tables to the wrong database, or the data to the wrong table!]
+- Get together in your groups
+- Share your spreadsheet
+- Explain it to your group
+- Help each other improve your data models
+
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
