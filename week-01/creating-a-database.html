@@ -27,7 +27,7 @@ class: middle
 
 - [ ] [Review Terms](#terms)
 - [ ] [Install PostgreSQL](#install)
-- [ ] Make a Database!
+- [ ] [Make a Database!](#sql)
 
 ---
 name: terms
@@ -67,9 +67,9 @@ class: middle, center
 ---
 class: middle, center
 
-# .seven[Sheet  ->  Table]
-## .eight[Row  ->  Record]
-### .nine[Column  ->  Field]
+# .seven[Sheet  -&gt;  Table]
+## .eight[Row  -&gt;  Record]
+### .nine[Column  -&gt;  Field]
 
 ---
 name: install
@@ -119,17 +119,27 @@ pgAdmin is a web interface for our Postgres databases.
 
 ---
 
+# Quick Overview of pgAdmin
+
+- Postgres needs to be running for pgAdmin to work
+- pgAdmin needs to be running for the web app to work
+- Save a bookmark of the web app to open it again, if needed
+- Or use the pgAdmin icon in the menu bar
+
+---
+name: sql
+
 # Your First Database!
 
 - Make sure the .eight[postgres] **database** is selected
-- Click the lightning icon at the top right of the sidebar
-- This is the .eight[Query Tool], the place to execute queries.
+- Click the .eight[Query Tool] icon at the top right of the sidebar
+- This opens a new tab to execute queries.
 
 ```sql
 CREATE DATABASE analysis;
 ```
 
-- Hit the execute button (also a lightning bolt) or F5
+- Hit the execute button, the play symbol, or F5
 
 ---
 
@@ -146,10 +156,10 @@ CREATE DATABASE analysis;
 
 - Queries usually return .eight[Messages]:
 ```
-Query returned successfully in 709 msec.
+Query returned successfully in 79 msec.
 ```
-- In the sidebar, right click .eight[Databases(1)]
-- Click .eight[Refresh]
+- In the sidebar, right click .eight[Databases]
+- Click .eight[Refresh] to get the sidebar to update
 - Ta-da!
 
 ---
@@ -158,8 +168,8 @@ Query returned successfully in 709 msec.
 
 - Queries need to be executed on a database
 - Certain exceptions...
-- Hit the "X" icon to close the Query Tool
-- Click on your new .eight[analysis] database
+- Hit the "X" icon to close the Query Tool tab
+- Select your new .eight[analysis] database in the sidebar
 - Reopen the Query Tool
 
 ---
@@ -214,7 +224,9 @@ class: middle, center
 # Did it work?
 
 ```
-Query returned successfully: 4 rows affected.
+INSERT 0 4
+
+Query returned successfully in 106msec.
 ```
 
 ---
@@ -231,7 +243,7 @@ class: middle, center
 
 # bigserial
 
-_Don't worry, we'll learn more later_
+_Don't worry, we'll learn what this is later_
 
 ---
 class: middle
