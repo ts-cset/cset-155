@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Lecture 03: Exploring Data</title>
+    <title>Exploring Data</title>
     <meta charset="utf-8">
 
     <link rel="stylesheet" href="../assets/slides.css" />
@@ -16,8 +16,6 @@ class: middle
 ---
 class: middle
 
-## Lecture .eight[03]
-
 # Exploring Data
 
 ---
@@ -25,18 +23,17 @@ class: middle
 
 # Agenda
 
-1. [X] Review Homework
-2. [ ] Reset Our Data
-3. [ ] Inspect It
-4. [ ] Filter It
-5. [ ] Sort It
-6. [ ] Limit It
+1. [ ] [Get Some Data](#script)
+2. [ ] [Inspect It](#select)
+3. [ ] [Sort It](#order_by)
+4. [ ] [Filter It](#where)
 
 ---
+name: script
 
-# Reset Data
+# Get Some Data
 
-To make sure we're all looking at the same data, download [this file](week-01/chapter-01.sql) and run this command:
+To make sure we're all looking at the same data, download [this file](chapter-01.sql) and run this command:
 
 ```sh
 $ psql postgres -f chapter-01.sql
@@ -55,11 +52,12 @@ class: middle, center
 Today, we learn to interview our data and see what story it can tell us.
 
 ---
+name: select
 class: middle, center
 
 # .eight[SELECT]
 
-## Retrieves Rows and Columns from one or more Tables
+## Retrieves Records from one or more Tables
 
 ---
 
@@ -70,7 +68,7 @@ SELECT * FROM teachers;
 ```
 .fourteen[Retrieve all data in all columns from the teachers table]
 
-- The .eight[*] is a <em>wildcard</em>
+- The .eight[&#42;] is a *wildcard*
 - Here, it means "Every Column"
 - .eight[FROM] specifies the table
 
@@ -122,6 +120,13 @@ FROM teachers;
   - "For each student, what courses are they taking?"
 
 ---
+name: order_by
+
+# .eight[ORDER BY]
+
+## Sorts the Results according to one or more Fields
+
+---
 
 # Sorting Data
 
@@ -151,11 +156,18 @@ ORDER BY school ASC, hire_date DESC;
 - Most useful on only one or two
 
 ---
+name: where
+
+# .eight[WHERE]
+
+## Filters the Results according to one or more Fields
+
+---
 
 # Limiting Data
 
 ```sql
-SELECT last_name, scool, hire_date
+SELECT last_name, school, hire_date
 FROM teachers
 WHERE school = 'Myers Middle School';
 ```
