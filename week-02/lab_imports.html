@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Lab 01: Importing Data</title>
+  <title>Lab: Importing And Exploring Data</title>
   <meta charset="utf-8">
 
   <link rel="stylesheet" href="../assets/slides.css" />
 </head>
 <body>
   <h1>
-    Lab 01: Importing Data
+    Lab: Importing And Exploring Data
   </h1>
 
   <hr>
@@ -18,7 +18,7 @@
   </p>
 
   <p>
-    We can use specially formatted files, called <em>delimited</em> text files, to import data in bulk using SQL's <code>COPY</code> command like so:
+    You can use specially formatted files, called <em>delimited</em> text files, to import data in bulk using SQL's <code>COPY</code> command like so:
   </p>
 
   <pre>
@@ -30,7 +30,7 @@
   </pre>
 
   <p>
-    We're going to import some census data, <a href="https://www.census.gov/prod/cen2010/briefs/c2010br-01.pdf" target="_blank">described here</a>. You can download the file <a href="https://raw.githubusercontent.com/anthonydb/practical-sql/master/Chapter_04/us_counties_2010.csv" target="_blank">here</a>. It's a heck of a lot bigger than the data sets we've been working on so far: it's got 3,143 records and 91 columns. Take a quick look at the file you just downloaded and see what you can learn about delimited text files. How are they organized? Where do the labels go? What separates the data?
+    You're going to import some census data, <a href="https://www.census.gov/prod/cen2010/briefs/c2010br-01.pdf" target="_blank">described here</a>. You can download the file <a href="https://raw.githubusercontent.com/anthonydb/practical-sql/master/Chapter_04/us_counties_2010.csv" target="_blank">here</a>. It's a heck of a lot bigger than the data sets you've been working on so far: it's got 3,143 records and 91 columns. Take a quick look at the file you just downloaded and see what you can learn about delimited text files. How are they organized? Where do the labels go? What separates the data?
   </p>
 
   <hr>
@@ -40,15 +40,15 @@
   </h2>
 
   <p>
-    Now that we have data, we have to create the table to import it all. After looking at some of the data you should have a good idea of some of the column names and data types we'll need. Go ahead and make a short list of them. You don't have to make a complete list, 91 columns long, but try to find a column of a few different data types. What should be a varchar as opposed to a char? What about smallint as opposed to numeric?
+    Now that you have data, you have to create the table to import it all. And if you're making a table, you're going to have to create the columns, too. What data types will you need? Compare the some of the data in your import file to <a href="https://www.postgresql.org/docs/9.5/datatype.html" target="_blank">the list of Postgres data types</a>. Don't make a complete list of all 91 columns. Instead, focus on the <em>numeric</em> and <em>character</em> types. What are some differences between the types? And what data types seem most useful to hold data in this table?
   </p>
 
   <p>
-    After struggling with that for a bit, here's <a href="create-table.sql" target="_blank">the full CREATE TABLE query</a>. Go ahead and run it in the analysis database.
+  After struggling with that for a bit, here's <a href="create-table.sql" target="_blank">the full CREATE TABLE query</a>. Go ahead and run it in the analysis database. If you don't remember, look back at slides to see the last time you used a file and the <code>psql</code> command in the terminal. <strong>Remember to run it on the <code>analysis</code> database!</strong>
   </p>
 
   <p>
-    Run <code>SELECT * FROM us_counties_2010;</code> to see if it worked.
+    Then open up pgAdmin and run <code>SELECT * FROM us_counties_2010;</code> to see if you have the table and columns.
   </p>
 
   <hr>
@@ -70,7 +70,7 @@
   </pre>
 
   <p>
-    You should see a success message about 3143 rows being affected.
+    You should see a success message about 3143 rows being affected. Since you don't know where pgAdmin is located, it's best to use an absolute file path to the data file.
   </p>
 
   <hr>
@@ -80,11 +80,11 @@
   </h3>
 
   <p>
-    Go ahead and run a SELECT query to view all the data. Did it get imported correctly?
+    Run that <code>SELECT</code> query again to view all the data. Did it get imported correctly?
   </p>
 
   <p>
-    If it did, congrats! Now try using what we learned yesterday to explore the data. Come up with 5 different SQL queries that answer certain questions you have about the data. Have fun exploring!
+  If it did, congrats! Practice using <code>SELECT</code> with the other keywords to craft queries that might reveal questions about the data. Don't forget about the PDF linked above to understand the data that you're looking at. Have fun exploring!
   </p>
 </body>
 </html>
