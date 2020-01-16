@@ -23,9 +23,9 @@ class: middle
 
 # Agenda
 
-1. [ ] Characters
-2. [ ] Numbers
-3. [ ] Dates and Times
+1. [ ] [Characters](#characters)
+2. [ ] [Numbers](#numbers)
+3. [ ] [Dates and Times](#dates-times)
 
 ---
 class: middle, center
@@ -33,6 +33,7 @@ class: middle, center
 # Each column holds one and only one data type.
 
 ---
+name: characters
 
 # Characters
 
@@ -99,6 +100,7 @@ WITH (FORMAT CSV, HEADER, DELIMITER '|');
 .fourteen[What are some uses for char, varchar, and text?]
 
 ---
+name: numbers
 
 # Numbers
 
@@ -245,6 +247,7 @@ WHERE numeric_column = .7;
 3. Use a big enough number!
 
 ---
+name: dates-times
 
 # Dates and Times
 
@@ -326,9 +329,45 @@ FROM date_time_types;
 
 # CAST
 
-Converts data types on output from a query
+- Converts data types on output from a query
+- Does not change the column's data type
 
-### .fourteen[Try to find the syntax online]
+---
+
+# CAST Examples
+
+```sql
+SELECT timestamp_column,
+       CAST(timestamp_column AS varchar(10))
+FROM date_time_types;
+```
+
+---
+
+# CAST Examples
+
+```sql
+SELECT numeric_column,
+       CAST(numeric_column AS integer),
+       CAST(numeric_column AS varchar(6))
+FROM number_data_types;
+```
+
+---
+
+# CAST Examples
+
+```sql
+SELECT CAST(char_column AS integer)
+FROM char_data_types;
+```
+
+Shortcut Notation:
+
+```sql
+SELECT char_column::integer
+FROM char_data_types;
+```
 
 ---
 
