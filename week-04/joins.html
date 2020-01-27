@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Lecture 07: Relational Data</title>
+    <title>Joins</title>
     <meta charset="utf-8">
 
     <link rel="stylesheet" href="../assets/slides.css" />
@@ -16,103 +16,17 @@ class: middle
 ---
 class: middle
 
-## Lecture .eight[07]
-
-# Relational Data
+# Joins
 
 ---
 class: middle
 
 # Agenda
 
-1. [ ] [Types of Relationship](#relationships)
-2. [ ] [Basic Syntax](#syntax)
-3. [ ] [Key Columns](#keys)
-4. [ ] [Types of Joins](#joins)
-5. [ ] [Using Joins in other Queries](#other)
-
----
-
-# Relational Data
-
-This table tracks employee AND department data.
-
-```md
-dept  location  first_name  last_name  salary
-----  --------  ----------  ---------  ------
-Tax   Atlanta   Nancy       Jones      62500
-Tax   Atlanta   Lee         Smith      59300
-IT    Boston    Soo         Nguyen     83000
-IT    Boston    Janet       King       95000
-```
-
----
-
-# Relational Data
-
-- Small sample, but imagine more data
-- Split the data into two tables, one for each entity
-- Less redundant
-- More maintainable
-
-.fourteen[But how would we query it?]
-
----
-name: relationships
-
-# Types of Relationships
-
-- One-to-One
-- One-to-Many
-- Many-to-Many
-
----
-
-# One-to-One
-
-A single row in one table matches a single row in another.
-
-- Imagine two tables, committee_members and leadership_positions
-- Each member can only hold one position
-- Each position can only be held by one member
-
----
-
-# One-to-One
-
-.center[![one-to-one relationship diagram](https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/CPT-Databases-OnetoOne.svg/500px-CPT-Databases-OnetoOne.svg.png)]
-
----
-
-# One-to-Many
-
-A single row in one table has multiple matches in another table
-
-- Imagine two tables, car_makes and car_models
-- Each make can have many models
-- Each model can only have one make
-
----
-
-# One-to-Many
-
-.center[![one-to-many relationship diagram](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/CPT-Databases-OnetoMany2.svg/500px-CPT-Databases-OnetoMany2.svg.png)]
-
----
-
-# Many-to-Many
-
-Multiple rows from one table have multiple matches in another table.
-
-- Imagine two tables, students and courses
-- Each student can take multiple courses
-- Each course can be taken by multiple students
-
----
-
-# Many-to-Many
-
-.center[![many-to-many relationship diagram](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/CPT-Databases-ManytoMany.svg/500px-CPT-Databases-ManytoMany.svg.png)]
+1. [ ] [Basic Syntax](#syntax)
+2. [ ] [Key Columns](#keys)
+3. [ ] [Types of Joins](#joins)
+4. [ ] [Using Joins in other Queries](#other)
 
 ---
 name: syntax

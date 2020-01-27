@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Relational Data</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+# Relational Data
+
+---
+class: middle
+
+# Agenda
+
+1. [ ] Types of Relationships:
+  1. [ ] [One-to-One](#one-to-one)
+  2. [ ] [One-to-Many](#one-to-many)
+  3. [ ] [Many-to-Many](#many-to-many)
+2. [ ] [Modeling Relationships](#modeling)
+
+---
+
+# An Employee Table?
+
+```md
+dept  location  first_name  last_name  salary
+----  --------  ----------  ---------  ------
+Tax   Atlanta   Nancy       Jones      62500
+Tax   Atlanta   Lee         Smith      59300
+IT    Boston    Soo         Nguyen     83000
+IT    Boston    Janet       King       95000
+```
+
+---
+count: false
+
+# An Employee Table?
+
+```md
+dept  location  first_name  last_name  salary
+----  --------  ----------  ---------  ------
+Tax   Atlanta   Nancy       Jones      62500
+Tax   Atlanta   Lee         Smith      59300
+IT    Boston    Soo         Nguyen     83000
+IT    Boston    Janet       King       95000
+```
+
+This one table tracks employee .eleven[**AND**] department entities.
+
+---
+
+# Relational Data
+
+- Small sample, but imagine more data
+- Split the data into two tables, one for each entity
+- Less redundant
+- More maintainable
+
+.fourteen[But how would we write a query to get both pieces of data at once?]
+
+---
+name: relationships
+
+# Types of Relationships
+
+- One-to-One
+- One-to-Many
+- Many-to-Many
+
+---
+name: one-to-one
+
+# One-to-One
+
+.eight[A single record in one table matches a single record in another]
+
+<img class="center" alt="one-to-one relationship diagram" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/CPT-Databases-OnetoOne.svg/500px-CPT-Databases-OnetoOne.svg.png" />
+
+---
+
+# One-to-One
+
+- Least common relationship
+- Some one-to-one relationships are combined into a single table
+- Can be used to fix certain performance issues
+- Used in archived data analysis more than CRUD apps
+
+---
+
+# One-to-One Examples
+
+Imagine two tables: .eight[committee_members] and .eight[leadership_positions]:
+- Each member can only hold one position
+- Each position can only be held by one member
+- Better as two tables since positions change every term
+
+[Database Primer: One-to-One](https://www.databaseprimer.com/pages/relationship_1to1/)
+
+---
+name: one-to-many
+
+# One-to-Many
+
+.eight[A single row in one table has multiple matches in another table]
+
+<img class="center" alt="one-to-many relationship diagram" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/CPT-Databases-OnetoMany2.svg/500px-CPT-Databases-OnetoMany2.svg.png" />
+
+---
+
+# One-to-Many
+
+- Most common type of relationship
+- Easiest way to maintain repetitive data
+- Most DBMSs have built-in ways to handle this
+
+---
+
+# One-to-Many Examples
+
+Imagine two tables: .eight[car_makes] and .eight[car_models]
+- Each make can have many models
+- Each model can only have one make
+
+[Database Primer: One-to-Many](https://www.databaseprimer.com/pages/relationship_1tox/)
+
+---
+name: many-to-many
+
+# Many-to-Many
+
+.eight[Multiple rows from one table have multiple matches in another table]
+
+<img class="center" alt="many-to-many relationship diagram" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/CPT-Databases-ManytoMany.svg/500px-CPT-Databases-ManytoMany.svg.png" />
+
+---
+
+# Many-to-Many
+
+- Also a very common relationship
+- Frequently gets mistaken for One-to-Many, so be careful!
+- Databases don't have a good way to represent them
+- Break it into **two** One-to-Many relationships using a special table
+
+There's [many names](https://en.wikipedia.org/wiki/Associative_entity) for this special table...
+
+---
+# Many-to-Many Examples
+
+Imagine two tables: .eight[students] and .eight[courses]
+- Each student can take multiple courses
+- Each course can be taken by multiple students
+- Add a third table called .eight[student_courses], or something more descriptive like .eight[registrations]
+
+[Database Primer: Many-to-Many](https://www.databaseprimer.com/pages/relationship_xtox/)
+
+---
+name: modeling
+
+# Modeling Relationships
+
+```md
+dept  location  first_name  last_name  salary
+----  --------  ----------  ---------  ------
+Tax   Atlanta   Nancy       Jones      62500
+Tax   Atlanta   Lee         Smith      59300
+IT    Boston    Soo         Nguyen     83000
+IT    Boston    Janet       King       95000
+```
+
+Let's fix this table.
+
+---
+class: middle, center
+
+# .fourteen[But we still don't know how to query relationships!]
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
