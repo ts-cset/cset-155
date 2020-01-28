@@ -29,6 +29,17 @@ class: middle
 4. [ ] [Using Joins in other Queries](#other)
 
 ---
+
+# Reading Data
+
+```sql
+SELECT *
+FROM table_name;
+```
+
+Get all fields for all records from **one** table.
+
+---
 name: syntax
 
 # Basic Syntax
@@ -38,10 +49,38 @@ JOIN ... ON
 ```sql
 SELECT *
 FROM table_a JOIN table_b
-ON table_a.primary_key = table_b.foreign_key;
+ON table_a.key_column = table_b.foreign_key_column;
 ```
 
 Links one table to another by matching values contained in certain columns.
+
+---
+
+# Basic Syntax
+
+Search left first, then right:
+
+```sql
+FROM left_table JOIN right_table
+```
+
+What are these *keys*?
+
+```sql
+ON key_column = foreign_key_column
+```
+
+---
+
+# Basic Syntax
+
+Multiple tables means you have to specify which table a column belongs in:
+
+```sql
+table_a.column_name
+-- versus
+table_b.column_name
+```
 
 ---
 class: middle, center
