@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Lecture 08: Table Design</title>
+    <title>Table Design</title>
     <meta charset="utf-8">
 
     <link rel="stylesheet" href="../assets/slides.css" />
@@ -16,8 +16,6 @@ class: middle
 ---
 class: middle
 
-## Lecture .eight[08]
-
 # Table Design
 
 ---
@@ -29,6 +27,8 @@ class: middle
 2. [ ] [Table Design Rules](#rules)
 3. [ ] [More on Constraints](#constraints)
 4. [ ] [Altering Tables](#alter)
+
+???
 5. [ ] [Indexes](#indexes)
 
 ---
@@ -60,7 +60,13 @@ CREATE TABLE customers;
 CREATE TABLE Customers;
 ```
 
-The second query will .eleven[fail] if run after the first, unless you use double-quotes:
+The second query will .eleven[fail] because that table already exists.
+
+---
+
+# Case Conventions
+
+If you need case sensitivity, use quotes:
 
 ```sql
 CREATE TABLE "Customers";
@@ -99,7 +105,7 @@ name: rules
 
 # Rules to Avoid Danger
 
-1. Stick with snake_case
+1. Stick with snake_case names
 2. Use proper names, not cryptic abbreviations
 3. Watch out for length limits on names
 4. Pluralize your table names
@@ -107,6 +113,16 @@ name: rules
 
 ---
 name: constraints
+
+# More on Constraints
+
+- Rules created for a Table or a Column
+- Defined in a .eight[CREATE] or .eight[ALTER TABLE] statement
+- Checked on .eight[INSERT], .eight[UPDATE], .eight[DELETE], etc.
+
+[You read the documentation, right?](https://www.postgresql.org/docs/current/ddl-constraints.html)
+
+---
 
 # More on Constraints
 
@@ -119,21 +135,24 @@ Table or Column Constraint?
 - [Check](#check)
 - [Not Null](#null)
 
-Both are created in the .eight[CREATE TABLE] statement, but they are checked at different times.
-
 ---
 name: pk
 
-# Primary Keys: Natural or Surrogate?
+# Primary Keys: Natural
 
-- Natural:
-  - License Plate, Book ISBN, Product SKU, etc.
-  - Already exist, so no extra column is needed
-  - Already have meaning
-- Surrogate:
-  - Serial integers, UUID, or custom values
-  - Intentionally don't have meaning
-  - Can save space depending on data type
+- Already exist, so no extra column is needed
+- Already have meaning
+
+Examples: License Plate, Book ISBN, Product SKU
+
+---
+
+# Primary Keys: Surrogate
+
+- Intentionally don't have meaning
+- Can save space depending on data type
+
+Examples: Serial integers, UUID, or custom values
 
 ---
 
@@ -143,7 +162,6 @@ name: pk
 
 - Column constraint syntax in the first statement
 - Table constraint syntax in the second
-- .eight[DROP TABLE] deletes a table from the database
 
 .fourteen[Run Listing 7-2 to see a key violation error]
 
@@ -169,7 +187,7 @@ What is the reason for the two different syntaxes?
 
 .fourteen[Listing 7-5 shows use of bigserial]
 
-There are reasons to avoid auto-incrementing keys, but if you don't know them, don't bother.
+There are reasons to avoid auto-incrementing keys, but if you don't have problems, you have nothing to fix.
 
 ---
 name: fk
@@ -183,13 +201,8 @@ Just like Primary Keys, Foreign Keys help maintain .eight[referential integrity]
 How many keys do these tables have?
 
 ---
-count: false
 
 # Foreign Keys: Syntax
-
-Just like Primary Keys, Foreign Keys help maintain .eight[referential integrity].
-
-.fourteen[Run Listing 7-6 one query at a time.]
 
 How many keys do these tables have?
 
@@ -207,12 +220,7 @@ Did you get an error? Should you have?
 - What about removing a reference already in use?
 
 ```sql
-CREATE TABLE registrations (
-  registration_id varchar(10),
-  registration_date date,
-  license_id varchar(10) REFERENCES licenses (license_id) ON DELETE CASCADE,
-  CONSTRAINT registration_key PRIMARY KEY (registration_id, license_id)
-);
+fk_col datatype REFERENCES tableB (pk_col) ON DELETE CASCADE
 ```
 
 ---
@@ -233,21 +241,15 @@ CONSTRAINT grad_check CHECK (credits &gt;= 120 AND tuition = 'PAID')
 .fourteen[Run Listing 7-7]
 
 ---
-
-# Check
-
-Great Debate:
-
-- Logic in the database?
-- Logic in the code?
-- Both?
-
----
 name: unique
 
 # Unique
 
 One difference between Primary Key and Unique: NULL
+
+```sql
+CONSTRAINT unique_users UNIQUE (username)
+```
 
 .fourteen[Run Listing 7-8 to see an example]
 
@@ -258,7 +260,16 @@ name: null
 
 When you need values.
 
+```sql
+CREATE TABLE orders (
+  ...
+  quantity integer NOT NULL
+);
+```
+
 .fourteen[Run Listing 7-9]
+
+But you also might want to look at [default values](https://www.postgresql.org/docs/current/ddl-default.html).
 
 ---
 name: alter
@@ -284,6 +295,16 @@ ALTER TABLE table_name ALTER COLUMN col_name DROP NOT NULL;
 Quick note:
 
 .eleven[You can only add a constraint if the data already follows it.]
+
+Update the data first, then add your new rule.
+
+---
+
+# Great Debate on Constraints
+
+- Business logic in the database?
+- Business logic in the code?
+- Both?
 
 ---
 class: middle, center
