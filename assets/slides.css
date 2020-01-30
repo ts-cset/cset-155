@@ -80,3 +80,8 @@ ol {
   font-size: calc(.75rem + 1.5vw);
   padding: 3vw;
 }
+
+.center.img {
+  display: block;
+  margin: auto;
+}
