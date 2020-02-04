@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Lecture 09: Aggregate Functions</title>
+    <title>Aggregates and Groups</title>
     <meta charset="utf-8">
 
     <link rel="stylesheet" href="../assets/slides.css" />
@@ -16,9 +16,7 @@ class: middle
 ---
 class: middle
 
-## Lecture .eight[09]
-
-# Aggregate Functions
+# Aggregates And Groups
 
 ---
 class: middle
@@ -30,6 +28,40 @@ class: middle
 3. [ ] [Finding Min/Max Values](#min-max)
 4. [ ] [Aggregate Using Group](#group)
 5. [ ] [Revisiting Sum](#sum)
+
+---
+
+# Grouping Data
+
+Up till now, most of our queries looked at each record as an individual result:
+
+- Selected some or all of a record's fields
+- Filtered records with .eight[WHERE]
+- Sorted records with .eight[ORDER BY]
+- Did math on a record's fields
+- Joined a record with another
+
+---
+
+# Grouping Data
+
+The two exceptions:
+
+- .eight[avg()] 
+- .eight[sum()]
+
+These are **aggregate functions**. They took data from a column of all the records and reduced it to a single value.
+
+---
+
+# Grouping Data
+
+What if we wanted to reduce data into groups of values?
+
+- Find the average county population for each state
+- Add the salaries of all employees in each department
+- Count the number of orders placed by every user
+- Find the most read book by every author
 
 ---
 name: setup
@@ -265,9 +297,9 @@ Look at the survey's documentation to figure out what the regions are.
 
 # .fourteen[Exercises]
 
-Let's not forget how to use joins!
+More join practice!
 
-Write a query that will show all the rows in both tables, including those without matches, and add an .eight[IS NULL] filter to show agencies not included in or the other table.
+Write a query that will show all the rows in both tables, including those without matches, and add an .eight[IS NULL] filter to show libraries not included in or the other table.
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
