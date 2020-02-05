@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Postgres CLI</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+# Postgres CLI
+
+---
+class: middle
+
+# Agenda
+
+1. [ ] [Using psql](#psql)
+2. [ ] [Meta-Commands](#commands)
+3. [ ] [Running Queries](#queries)
+4. [ ] [Formatting Results](#format)
+5. [ ] [Saving Output](#output)
+
+---
+name: psql
+
+#  Using psql
+
+PostgreSQL provides the .eight[psql] program to manage your databases from the command line.
+
+```bash
+$ psql --version
+psql (PostgreSQL) 12.1
+$ man psql
+```
+
+---
+
+# Using psql
+
+Just like the Query Tool in pgAdmin, you need to open a connection to a specific database:
+
+```bash
+$ psql analysis
+psql (12.1)
+Type "help" for help.
+
+analysis=#
+```
+
+Now you're in a REPL!
+
+---
+
+# Using psql
+
+Check the man page for other options:
+
+- Connect as different user
+- Connect to a remote server
+- Or performing some single action instead of opening a REPL
+
+---
+
+# Using psql
+
+Note on the database user:
+
+- .eight[#] at the end of the prompt for .eight[superusers]
+- .eight[&gt;] at the end of the prompt for non superusers
+
+[Read the docs](https://www.postgresql.org/docs/current/user-manag.html) to see what users and roles are for.
+
+---
+name: commands
+
+# Meta-Commands
+
+In the REPL, you can use .eight[meta-commands] preceded by a backslash to interact with psql.
+
+```bash
+=# \?
+=# \h [keyword]
+```
+
+The first lists all the meta-commands and the second gives you help on SQL keywords.
+
+---
+
+# Meta-Commands
+
+Some notable commands:
+
+- .eight[\c [database]] connects you to a new database
+- .eight[\l] lists all databases
+- .eight[\dt] lists all tables in the database
+- add .eight[+] to see more details like size
+
+---
+name: queries
+
+# Running Queries
+
+You can run any valid SQL query in the REPL.
+
+```sql
+=# SELECT * FROM employees;
+```
+
+---
+
+# Running Queries
+
+Format your query correctly:
+
+- Hitting .eight[enter] can split your query on new lines.
+- Your query will only run if you end it with a semicolon!
+- The prompt changes from .eight[=#] to .eight[(#] to show unclosed parens.
+- Hit .eight[CTRL-C] to cancel a query and get back to the prompt.
+- Hit .eight[CTRL-D] to quit psql.
+- Use tab completion to help you out!
+
+---
+name: format
+
+# Formatting Results
+
+- Small result sets are printed below your query
+- Larger results are piped to .eight[less]
+
+---
+
+# Formatting Results
+
+For tables with many columns, use the expanded view command to see results as a vertical block.
+
+```sql
+=# SELECT * FROM employees;
+=# \x
+=# SELECT * FROM employees;
+```
+
+---
+
+# Formatting Results
+
+You can use the .eight[\pset] command to set variables to change the format:
+
+- .eight[border <int>] to see different border options
+- .eight[format unaligned] to see delimited lines, not columns
+
+[Read the docs for pset](https://www.postgresql.org/docs/current/app-psql.html) to see more options
+
+---
+name: output
+
+# Saving Output
+
+As always, you can use the .eight[COPY] keyword to import and export using a query. There's a .eight[\copy] command to do the same thing.
+
+---
+
+# Saving Output
+
+You can use the .eight[\o] command to save results directly to a file.
+
+```sql
+=# SELECT * FROM employees;
+=# \o '/absolute/path/to/file'
+=# SELECT * FROM employees;
+```
+
+.eleven[Don't accidentally overwrite a file you need!]
+
+---
+
+# .fourteen[Practice Using the CLI]
+
+Go through some of the other slides and see if you can complete them using .eight[psql] instead of .eight[pgAdmin]. It's good review!
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
