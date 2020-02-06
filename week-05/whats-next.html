@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SQL: What's Next?</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+# SQL: What's Next?
+
+---
+class: middle
+
+# Agenda
+
+1. [ ] [Review](#review)
+2. [ ] [Advanced Queries](#advanced)
+3. [ ] [Views, Functions, Triggers](#views)
+4. [ ] [Text Search](#search)
+5. [ ] [Fancy Data Types](#types)
+6. [ ] [Maintenance Tools](#maintenance)
+7. [ ] [Scaling Up](#scaling)
+
+---
+name: review
+
+# Review
+
+The Book: [Practical SQL](https://nostarch.com/practicalSQL)
+
+The Chapters We Covered:
+
+1) Creating Your First Database And Table
+
+2) Beginning Data Exploration With SELECT
+
+3) Understanding Data Types
+
+4) Importing And Exporting Data
+
+---
+
+# Review
+
+5) Basic Math And Stats With SQL
+
+6) Joining Tables In A Relational Database
+
+7) Table Design That Works For You
+
+8) Extracting Information By Grouping And Summarizing
+
+9) Inspecting And Modifying Data
+
+16) Using PostgreSQL From The Command Line
+
+---
+name: advanced
+
+# Advanced Queries
+
+Subqueries can return values to be used in the main query.
+
+```sql
+UPDATE table
+SET column = (SELECT column
+              FROM table_b
+              WHERE table.column = table_b.column)
+WHERE EXISTS (SELECT column
+              FROM table_b
+              WHERE table.column = table_b.column);
+```
+
+---
+
+# Advanced Queries
+
+Show the counties with the top 10% of population.
+
+```sql
+SELECT geo_name, state_us_abbreviation, p0010001
+FROM us_counties_2010
+WHERE p0010001 &gt;= (
+  SELECT percentile_cont(.9) WITHIN GROUP (ORDER BY p0010001)
+  FROM us_counties_2010
+  )
+ORDER BY p0010001 DESC;
+```
+
+---
+
+# Advanced Queries
+
+Subqueries can also return **derived tables** that can be aliased and used in other queries, especially JOINs.
+
+[Look at Listing 12-4](https://github.com/anthonydb/practical-sql/blob/master/Chapter_12/Chapter_12.sql#L46-L71)
+
+---
+
+# Advanced Queries
+
+Also look into:
+
+- Common Table Expressions
+- Cross Tabulations
+- Conditionals with the CASE statement
+
+---
+name: views
+
+# Views, Functions, Triggers
+
+- Save commonly run queries as views
+- Program your own functions to reuse in queries*
+- Automate actions with triggers that run on events
+
+*You can even import and use Python!
+
+---
+name: search
+
+# Text Search
+
+Functions to Manipulate Strings:
+
+- upper(), lower(), initcap()
+- trim(), trailing trim()
+- char_length()
+
+Match Patterns with Regular Expressions!
+
+---
+name: types
+
+# Fancy Data Types
+
+More with Dates and Times:
+
+- extract date parts
+- create dates from parts
+- conversion with timezones
+
+GIS and Spatial Data:
+
+- points, lines, polygons
+- geography, geometry, well-known text
+- shape intersections, unions, etc.
+
+---
+name: maintenance
+
+# Maintenance Tools
+
+You've planned and planted a beautiful garden. You never have to touch it again, right?
+
+- Use tools like .eight[VACUUM] to clean up data
+- Look into the .eight[postgres.conf] file to tweak settings
+- Use the .eight[pg_ctl] CLI tool to manage the DBMS
+- Save frequent backups with .eight[pg_dump] or restore from a back up with .eight[pg_restore]
+
+---
+name: scaling
+
+# Scaling Up
+
+Once you get more data than you can handle, look into these terms:
+
+- [Horizontal vs Vertical Scaling](https://hackernoon.com/database-scaling-horizontal-and-vertical-scaling-85edd2fd9944)
+- [Sharding](https://www.digitalocean.com/community/tutorials/understanding-database-sharding)
+- [The CAP Theorem](https://mwhittaker.github.io/blog/an_illustrated_proof_of_the_cap_theorem/)
+
+---
+
+The End.
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
