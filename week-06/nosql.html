@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SQL vs NoSQL</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+# SQL vs NoSQL
+
+---
+class: middle
+
+# Agenda
+
+1. [ ] [Why SQL?](#sql)
+2. [ ] [More on Normalization](#normalization)
+3. [ ] [Types of NoSQL](#types)
+4. [ ] [Relational vs Document DBs](#document)
+5. [ ] [Intro to MongoDB](#mongo)
+
+---
+name: sql
+
+# Why SQL?
+
+We've reviewed the keywords and syntax, but let's look at the big picture:
+
+- Uses .eight[schemas] to enforce normalization.
+- Keeps entity data .eight[distributed] across multiple tables.
+- Allows .eight[relationships] between entities using joins and keys.
+
+---
+
+# Why SQL?
+
+The benefits:
+
+- .fourteen[You never have to worry about records not having fields.]
+- .fourteen[You can think about one simple entity at a time.]
+- .fourteen[You can still represent a complex mapping between related entities with rules to enforce them.]
+
+---
+
+# Why SQL?
+
+The drawbacks:
+
+- .eleven[Schemas aren't flexible.]
+- .eleven[Simple entities require more relationships, making some things more complicated than they need to be.]
+- .eleven[Distributed data in tables limits can lead to performance and scaling problems.]
+
+---
+name: normalization
+
+# More on Normalization
+
+Read up on the [formal rules for normalization.](https://en.wikipedia.org/wiki/Database_normalization)
+
+_Notice that satisfying the 1NF requires adding more tables when records can't be added without **altering** the table._
+
+---
+name: types
+
+# Types of NoSQL
+
+"Anything That Isn't SQL" isn't very descriptive...
+
+- .eight[Document]: MongoDB, CouchDB, etc.
+- .eight[Key-Value]: Redis, DynamoDB, etc.
+- .eight[Graph]: OrientDB, Neo4j, etc.
+- .eight[Wide-Column]: Cassandra, etc.
+- .eight[Search]: Elasticsearch, etc.
+
+---
+name: document
+class: middle, center
+
+# Relational vs Document
+
+### [Academind: MySQL vs MongoDB](https://www.youtube.com/watch?v=ZS_kXvOeQ5Y)
+
+---
+
+name: mongo
+
+# Intro to MongoDB
+
+- [Data Modeling a Document](https://docs.mongodb.com/guides/server/introduction/)
+- [CRUD Operations](https://docs.mongodb.com/manual/crud/)
+- [Data Types](https://docs.mongodb.com/manual/reference/bson-types/)
+
+Try it out with their [Getting Started guide](https://docs.mongodb.com/manual/tutorial/getting-started/)
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
