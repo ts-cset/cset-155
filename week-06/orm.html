@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Postgres and Python</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../assets/slides.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle
+
+# .eight[CSET 155:]
+## .eight[Database Design]
+
+---
+class: middle
+
+# Postgres and Python
+
+---
+class: middle
+
+# Agenda
+
+1. [ ] [Transactions](#transactions)
+2. [ ] [Stored Procedures](#procedures)
+3. [ ] [Cursors](#cursors)
+4. [ ] [SQL Adapters](#adapters)
+5. [ ] [SQL ORMs](#orms)
+
+---
+name: transactions
+
+# Transactions
+
+.eight[Bundle multiple queries into one all-or-nothing operation.]
+
+- Start the transaction
+- Run all the queries
+- If any fail, rollback the changes
+- Commit the transaction
+
+[PostgreSQL Docs: Transactions](https://www.postgresql.org/docs/current/tutorial-transactions.html)
+
+---
+
+# Transactions
+
+Examples:
+
+- place an order **AND** reduce the quantity of the items
+- check if a student passed pre-requisites **AND** register for a course
+- remove money from one account **AND** add it to another
+
+---
+name: procedures
+
+# Stored Procedures
+
+.eight[Function to run complex queries within a transaction.]
+
+- Call the function over and over
+- Work with parameters instead of fields and values
+- Can safely handle user input
+
+[PostgreSQL Docs: CREATE PROCEDURE](https://www.postgresql.org/docs/current/sql-createprocedure.html)
+
+---
+
+# Stored Procedures
+
+[Tutorial: Creating a Procedure](https://www.postgresqltutorial.com/postgresql-create-procedure/)
+
+---
+name: cursors
+
+# Cursors
+
+.eight[Encapsulate a query and get results one bit at a time.]
+
+- Think of a cursor in a big file: you move it around and it let's you know where you are.
+- In SQL, they're kind of annoying to work with.
+- Cursors can be passed around instead of the data!
+
+[PostgreSQL Docs: Cursors](https://www.postgresql.org/docs/current/plpgsql-cursors.html)
+
+---
+
+# Cursors
+
+[Tutorial: Cursors](https://www.postgresqltutorial.com/plpgsql-cursor/)
+
+---
+class: middle, center
+
+# .fourteen[Why didn't we learn any of this before?]
+
+---
+
+# Because we didn't need it till now.
+
+1. All our SQL was by hand, we could see an error and fix it before moving on.
+2. We needed the practice of writing the SQL in the first place.
+3. We never worked with data large enough, or quickly enough, to worry about memory problems.
+
+---
+name: adapters
+
+# SQL Adapters
+
+.eight[Program to connect an application to a database]
+
+- Run SQL queries in your app's programming language
+- a.k.a. Connectors or Drivers
+- Postgres to Python? install the .eight[psycopg2] package
+- There are others: records, py-postgresql, etc.
+
+---
+
+# SQL Adapters
+
+- [Psycopg 2 Docs: Basic Useage](https://www.psycopg.org/docs/usage.html)
+- [Tutorial: Connect To Postgres Server](https://www.postgresqltutorial.com/postgresql-python/connect/)
+- [Tutorial: Fetching Data](https://www.postgresqltutorial.com/postgresql-python/query/)
+- [Tutorial: Working with Transactions](https://www.postgresqltutorial.com/postgresql-python/transaction/)
+
+---
+name: orms
+
+# SQL ORMs
+
+.eight[Abstract the SQL and work with classes and objects]
+
+- Object-Relational Mapper
+- No SQL necessary .eleven[&ast;]
+- One programming language for faster development .eleven[&ast;]
+- Switch between any DBMS without changing app code .eleven[&ast;]
+
+---
+
+# SQL ORMs
+
+- SQLAlchemy
+  - Core? More database like
+  - ORM? More OOP like
+- Django ORM
+- etc.
+
+---
+
+# SQLAlchemy ORM
+
+- [ORM Docs: Getting Started](https://docs.sqlalchemy.org/en/13/orm/tutorial.html)
+- [Auth0: Tutorial](https://auth0.com/blog/sqlalchemy-orm-tutorial-for-python-developers/)
+
+---
+
+# Adapter vs ORM
+
+As always, it depends.
+
+- Small or large project?
+- Simple or complex relationships?
+- Prototype or long term project?
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
