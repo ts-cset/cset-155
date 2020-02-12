@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lab: Table Design</title>
+  <meta charset="utf-8">
+
+  <link rel="stylesheet" href="../assets/slides.css" />
+
+  <style type="text/css" media="screen">
+    code {
+      color: var(--nord8);
+    }
+  </style>
+</head>
+<body>
+  <h1>
+    Lab: Table Design
+  </h1>
+
+  <hr>
+
+  <p>
+    You've learned a lot of SQL and now you're going to put it all together by designing a whole database. The goal is to create a set of well-constructed tables and relationships that could actually be used by the application you've been using for all your data modeling exercises.
+  </p>
+
+  <p>
+    By trying to fit your app's data into a spreadsheet, you learned how to separate all the unique entities that your app cares about. The process of normalizing the data to fit into columns helped you discover all of the attributes for each entity. Then you mapped out the relationships between those entities in a database diagram, which gave you a better idea of how to structure your tables and add key columns.
+  </p>
+
+  <hr>
+
+  <h2>
+    Requirements
+  </h2>
+
+  <p>
+    Open your code editor and make a new SQL file. Save it with your name, like <code>last_first.sql</code>. At the top of the file, write the name of the application using SQL comments. This file will contain all the SQL queries to create the tables/columns/constraints/relationships and insert all of your data.
+  </p>
+
+  <ul>
+    <li>Write <code>CREATE TABLE</code> statements for all of your entity types.
+      <ul>
+        <li>Table and column names should follow SQL conventions.</li>
+        <li>Columns should have appropriate data types.</li>
+        <li>Columns should also have appropriate constraints when needed.</li>
+        <li>Each table needs a primary key.</li>
+      </ul>
+    </li>
+    <li>Make sure all the entity relationships are represented.
+      <ul>
+        <li>Enforce relationships with foreign key columns.</li>
+        <li>Each foreign key should be labeled with a comment to show the relationship type and explain how the entities are related in the application.</li>
+        <li>Don't forget to use constraints or join tables for the proper relationship type.</li>
+      </ul>
+    </li>
+    <li>Then write <code>INSERT INTO</code> statements to fill your tables with some data.
+      <ul>
+        <li>Each table should have enough records to accurately represent the possible data.</li>
+        <li>Your data should conform to all your constraints.</li>
+        <li>Each relationship should be represented with data.</li>
+      </ul>
+    </li>
+    <li><strong>And finally, you should write a comment before each query explaining everything that it's doing and why it's doing it. Be thorough.</strong></li>
+  </ul>
+
+  <hr>
+  
+  <h2>
+    Grading
+  </h2>
+
+  <p>
+    To grade your lab, I'm going to create a new database and then run your file all at once. There shouldn't be a single error. If you've designed your table well, I'll be able to tell at a glance what data it contains and how entities relate to each other.
+  </p>
+
+  <p>
+    You should do the same thing to make sure it all works. For example, say someone is working the school portal. I'll create a new database called <code>portal</code> and then run their queries with the following command:
+  </p>
+
+  <pre><code>$ psql portal -f last_first.sql</code></pre>
+
+  <hr>
+
+  <h2>
+    Things to Think About
+  </h2>
+
+  <ul>
+    <li>Spend more time thinking than coding. Design is a solution to a problem, so spend time thinking about the problem.</li>
+    <li>There are no minimum requirements since each database will be different. I will grade based on <strong>effort</strong>, as usual, and on how accurately you represented the application.</li>
+    <li>Like most programming we've done so far, order matters in SQL. You can't insert data into a table that doesn't exist yet. This is especially true for related entities.</li>
+    <li>Do not miss potential relationships between your tables. And don't add any that don't need to exist.</li>
+    <li>When you make a mistake, don't forget about the <code>DROP</code> or <code>DELETE</code> statements. It might take a few attempts to get everything right.</li>
+  </ul>
+
+  <p>
+    Good luck!
+  </p>
+  
+</body>
+</html>
